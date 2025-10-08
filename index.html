@@ -320,7 +320,8 @@
       </section>
 
       <div class="below-card">
-        <a id="staffLink" href="#staff">For Staffs, Log-in here</a>
+        <a id="staffLink" href="#">For Staffs, Log-in here</a>
+
       </div>
 
       <!-- Spacing between cards -->
@@ -445,7 +446,7 @@
       guestForm.hidden = isStaff;
       if(isStaff){ ensureMode('call'); }
       // Scroll into view for clarity on small screens
-      (isStaff ? staffForm : guestForm).scrollIntoView({behavior:'smooth', block:'start'});
+     
     }
 
     function syncFromHash(){
@@ -458,14 +459,14 @@
       }
     }
 
-    window.addEventListener('hashchange', syncFromHash);
-    window.addEventListener('DOMContentLoaded', syncFromHash);
 
-    if(staffLink){
-      staffLink.addEventListener('click', () => {
-        // clicking will set the hash; hashchange listener handles UI
-      });
-    }
+
+if (staffLink) {
+  staffLink.addEventListener('click', (e) => {
+    e.preventDefault();              // stop anchor jump
+    showState('staff');              // switch to staff view
+  });
+}
 
     // -------- Mode-specific fields
     const templates = {
@@ -527,10 +528,7 @@
       // inject fields
       modeFields.innerHTML = templates[m];
       // update hash without jumping the page
-      const newHash = `#staff-${m}`;
-      if(location.hash !== newHash){
-        history.replaceState(null, '', newHash);
-      }
+
     }
 
     bubbleButtons().forEach(btn => {
@@ -550,18 +548,7 @@
       return false;
     }
 
-    function showState(state){
-  const isStaff = state === 'staff';
-  staffForm.hidden = !isStaff;
-  guestForm.hidden = isStaff;
-
-  // ⬇ Hide the login link in logged-in state
-  const link = document.getElementById('staffLink');
-  if(link) link.style.display = isStaff ? 'none' : 'inline-block';
-
-  if(isStaff){ ensureMode('call'); }
-  (isStaff ? staffForm : guestForm).scrollIntoView({behavior:'smooth', block:'start'});
-}
+ 
 
   </script>
 </body>
