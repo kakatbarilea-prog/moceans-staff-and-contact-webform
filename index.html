@@ -319,9 +319,8 @@
         </form>
       </section>
 
-      <div class="below-card">
+      <div class="below-card" id="guestBelow">
         <a id="staffLink" href="#">For Staffs, Log-in here</a>
-
       </div>
 
       <!-- Spacing between cards -->
@@ -384,6 +383,11 @@
           </div>
         </form>
       </section>
+
+      <div class="below-card" id="staffBelow" hidden>
+        <a id="logoutLink" href="#">Log out</a>
+      </div>
+
     </div>
   </main>
 
@@ -437,6 +441,9 @@
     const staffForm = document.getElementById('staffForm');
     const staffLink = document.getElementById('staffLink');
     const modeFields = document.getElementById('modeFields');
+    const guestBelow = document.getElementById('guestBelow');
+    const staffBelow = document.getElementById('staffBelow');
+    const logoutLink = document.getElementById('logoutLink');
 
     const bubbleButtons = () => Array.from(staffForm.querySelectorAll('.bubble'));
 
@@ -444,9 +451,13 @@
       const isStaff = state === 'staff';
       staffForm.hidden = !isStaff;
       guestForm.hidden = isStaff;
+
+      // Toggle below-card links (login vs logout)
+      if (guestBelow) guestBelow.hidden = isStaff;
+      if (staffBelow) staffBelow.hidden = !isStaff;
+
       if(isStaff){ ensureMode('call'); }
-      // Scroll into view for clarity on small screens
-     
+      // (No auto-scroll)
     }
 
     function syncFromHash(){
@@ -459,14 +470,19 @@
       }
     }
 
+    if (staffLink) {
+      staffLink.addEventListener('click', (e) => {
+        e.preventDefault();              // stop anchor jump
+        showState('staff');              // switch to staff view
+      });
+    }
 
-
-if (staffLink) {
-  staffLink.addEventListener('click', (e) => {
-    e.preventDefault();              // stop anchor jump
-    showState('staff');              // switch to staff view
-  });
-}
+    if (logoutLink) {
+      logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showState('guest');              // back to non logged-in state
+      });
+    }
 
     // -------- Mode-specific fields
     const templates = {
@@ -527,8 +543,7 @@ if (staffLink) {
       });
       // inject fields
       modeFields.innerHTML = templates[m];
-      // update hash without jumping the page
-
+      // (No hash updates)
     }
 
     bubbleButtons().forEach(btn => {
@@ -547,8 +562,6 @@ if (staffLink) {
       alert('Logged a ' + currentMode + ' (demo).');
       return false;
     }
-
- 
 
   </script>
 </body>
