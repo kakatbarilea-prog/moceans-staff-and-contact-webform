@@ -128,7 +128,8 @@
   input[type="tel"],
   input[type="file"],
   input[type="number"],
-  textarea{
+  textarea,
+  select{
     width:100%;
     background:var(--field-bg);
     border:1px solid var(--field-line);
@@ -138,8 +139,20 @@
     outline:none;
     transition:border-color .15s ease, box-shadow .15s ease;
   }
+  /* Make selects visually match inputs (thicker, with chevron) */
+  select{
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    padding-right:38px; /* room for chevron */
+    background-image:
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23697b8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    background-repeat:no-repeat;
+    background-position: right 10px center;
+    background-size:16px;
+  }
   textarea{ min-height:120px; resize:vertical }
-  input:focus, textarea:focus{
+  input:focus, textarea:focus, select:focus{
     border-color:#c5d7df;
     box-shadow:0 0 0 4px rgba(9,112,149,.08);
   }
@@ -281,6 +294,16 @@
       <section id="guestForm" class="card" aria-labelledby="guestHeading">
         <h1 id="guestHeading">Contact / Activity Form</h1>
         <form class="stack" onsubmit="return handleGuestSubmit(event)">
+          <!-- Priority row -->
+          <div>
+            <label>Priority</label>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <label><input type="radio" name="g_priority" value="Emergency"> Emergency</label>
+              <label><input type="radio" name="g_priority" value="Urgent"> Urgent</label>
+              <label><input type="radio" name="g_priority" value="Non-Emergency"> Non-Emergency</label>
+            </div>
+          </div>
+
           <div class="row">
             <div>
               <label for="g-first">First Name</label>
@@ -303,9 +326,71 @@
             </div>
           </div>
 
+          <div class="row">
+            <div>
+              <label for="g-preferred">Preferred Contact Method</label>
+              <select id="g-preferred" name="preferred_contact_method">
+                <option value="">Please select</option>
+                <option>Phone</option>
+                <option>Email</option>
+                <option>Text</option>
+                <option>No preference</option>
+              </select>
+            </div>
+            <div>
+              <label for="g-gender">Gender</label>
+              <select id="g-gender" name="gender">
+                <option value="">Please select</option>
+                <option>Female</option>
+                <option>Male</option>
+                <option>Non-binary</option>
+                <option>Prefer not to say</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="g-age">Age</label>
+              <input id="g-age" type="number" name="age" min="0" />
+            </div>
+            <div>
+              <label for="g-county-city">County or City</label>
+              <input id="g-county-city" type="text" name="county_or_city" />
+            </div>
+          </div>
+
           <div>
-            <label for="g-message">Message</label>
-            <textarea id="g-message" name="message" placeholder="How can we help?"></textarea>
+            <label for="g-primary">Primary Issue</label>
+            <select id="g-primary" name="primary_issue">
+              <option value="">Please select</option>
+              <option>Housing Assistance</option>
+              <option>Employment</option>
+              <option>Transportation</option>
+              <option>Personal Care Support</option>
+              <option>Assistive Technology</option>
+              <option>Benefits / Financial Assistance</option>
+              <option>Education / Training</option>
+              <option>Advocacy / Legal Rights</option>
+              <option>Health & Wellness</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div id="g-primary-other-wrap" style="display:none;">
+            <label for="g-primary-other">Please specify (Other)</label>
+            <input id="g-primary-other" type="text" name="primary_issue_other" />
+          </div>
+
+          <div>
+            <label for="g-summary">Summary of Need</label>
+            <textarea id="g-summary" name="summary_of_need"></textarea>
+          </div>
+
+          <div>
+            <label for="g-notes">Additional Notes</label>
+            <textarea id="g-notes" name="additional_notes"></textarea>
           </div>
 
           <div>
@@ -330,7 +415,7 @@
       <section id="staffForm" class="card" aria-labelledby="staffHeading" hidden>
         <h1 id="staffHeading">Internal Staff Activity Logging</h1>
 
-        <!-- Bubbles -->
+        <!-- Bubbles (modes remain, fields below are the same for any mode) -->
         <div class="bubble-row" role="tablist" aria-label="Select activity type">
           <button class="bubble" role="tab" aria-selected="true" aria-pressed="true" data-mode="call">Log a Call</button>
           <button class="bubble" role="tab" aria-selected="false" aria-pressed="false" data-mode="email">Log an Email</button>
@@ -340,37 +425,105 @@
 
         <div class="divider" aria-hidden="true"></div>
 
-        <!-- Dynamic Fields Container -->
+        <!-- Fields (same for any selected mode) -->
         <form id="staffDynamic" class="stack" onsubmit="return handleStaffSubmit(event)">
-          <!-- Shared contact fields -->
-          <div class="row">
-            <div>
-              <label for="s-first">Contact First Name</label>
-              <input id="s-first" type="text" name="contact_first_name" autocomplete="given-name" />
-            </div>
-            <div>
-              <label for="s-last">Contact Last Name</label>
-              <input id="s-last" type="text" name="contact_last_name" autocomplete="family-name" />
+          <!-- Priority row -->
+          <div>
+            <label>Priority</label>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <label><input type="radio" name="s_priority" value="Emergency"> Emergency</label>
+              <label><input type="radio" name="s_priority" value="Urgent"> Urgent</label>
+              <label><input type="radio" name="s_priority" value="Non-Emergency"> Non-Emergency</label>
             </div>
           </div>
 
           <div class="row">
             <div>
-              <label for="s-email">Contact Email</label>
-              <input id="s-email" type="email" name="contact_email" autocomplete="email" />
+              <label for="s-first">First Name</label>
+              <input id="s-first" type="text" name="first_name" autocomplete="given-name" />
             </div>
             <div>
-              <label for="s-phone">Contact Phone</label>
-              <input id="s-phone" type="tel" name="contact_phone" autocomplete="tel" />
+              <label for="s-last">Last Name</label>
+              <input id="s-last" type="text" name="last_name" autocomplete="family-name" />
             </div>
           </div>
 
-          <!-- Mode-specific fields will be injected here -->
-          <div id="modeFields" class="stack"></div>
+          <div class="row">
+            <div>
+              <label for="s-email">Email</label>
+              <input id="s-email" type="email" name="email" autocomplete="email" />
+            </div>
+            <div>
+              <label for="s-phone">Phone</label>
+              <input id="s-phone" type="tel" name="phone" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="s-preferred">Preferred Contact Method</label>
+              <select id="s-preferred" name="preferred_contact_method">
+                <option value="">Please select</option>
+                <option>Phone</option>
+                <option>Email</option>
+                <option>Text</option>
+                <option>No preference</option>
+              </select>
+            </div>
+            <div>
+              <label for="s-gender">Gender</label>
+              <select id="s-gender" name="gender">
+                <option value="">Please select</option>
+                <option>Female</option>
+                <option>Male</option>
+                <option>Non-binary</option>
+                <option>Prefer not to say</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="s-age">Age</label>
+              <input id="s-age" type="number" name="age" min="0" />
+            </div>
+            <div>
+              <label for="s-county-city">County or City</label>
+              <input id="s-county-city" type="text" name="county_or_city" />
+            </div>
+          </div>
 
           <div>
-            <label for="s-notes">Notes</label>
-            <textarea id="s-notes" name="notes" placeholder="Internal notes"></textarea>
+            <label for="s-primary">Primary Issue</label>
+            <select id="s-primary" name="primary_issue">
+              <option value="">Please select</option>
+              <option>Housing Assistance</option>
+              <option>Employment</option>
+              <option>Transportation</option>
+              <option>Personal Care Support</option>
+              <option>Assistive Technology</option>
+              <option>Benefits / Financial Assistance</option>
+              <option>Education / Training</option>
+              <option>Advocacy / Legal Rights</option>
+              <option>Health & Wellness</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div id="s-primary-other-wrap" style="display:none;">
+            <label for="s-primary-other">Please specify (Other)</label>
+            <input id="s-primary-other" type="text" name="primary_issue_other" />
+          </div>
+
+          <div>
+            <label for="s-summary">Summary of Need</label>
+            <textarea id="s-summary" name="summary_of_need"></textarea>
+          </div>
+
+          <div>
+            <label for="s-notes">Additional Notes</label>
+            <textarea id="s-notes" name="additional_notes"></textarea>
           </div>
 
           <div>
@@ -405,7 +558,7 @@
             </a>
             <a class="social-link" href="https://www.instagram.com/moceans_cil/" aria-label="Instagram" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A5.5 5.5 0 1 1 6.5 13 5.51 5.51 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zM18 6.4a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 18 6.4z"/>
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A5.5 5.5 5.5 0 1 1 6.5 13 5.51 5.51 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zM18 6.4a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 18 6.4z"/>
               </svg>
             </a>
             <a class="social-link" href="https://www.linkedin.com/company/moceanscil" aria-label="LinkedIn" target="_blank" rel="noopener">
@@ -463,7 +616,6 @@
     function syncFromHash(){
       const hash = (location.hash || '').replace('#','').toLowerCase();
       showState(hash === 'staff' ? 'staff' : 'guest');
-      // when arriving on staff with a specific mode like #staff-email
       if(hash.startsWith('staff-')){
         const m = hash.split('-')[1];
         ensureMode(m);
@@ -472,83 +624,50 @@
 
     if (staffLink) {
       staffLink.addEventListener('click', (e) => {
-        e.preventDefault();              // stop anchor jump
-        showState('staff');              // switch to staff view
+        e.preventDefault();
+        showState('staff');
       });
     }
 
     if (logoutLink) {
       logoutLink.addEventListener('click', (e) => {
         e.preventDefault();
-        showState('guest');              // back to non logged-in state
+        showState('guest');
       });
     }
 
-    // -------- Mode-specific fields
-    const templates = {
-      call: `
-        <div class="row">
-          <div>
-            <label for="s-call-duration">Call Duration (minutes)</label>
-            <input id="s-call-duration" type="number" min="0" step="1" name="call_duration" placeholder="e.g., 12" />
-          </div>
-          <div>
-            <label for="s-call-purpose">Purpose of the Call</label>
-            <input id="s-call-purpose" type="text" name="call_purpose" placeholder="Follow-up, intro, support, etc." />
-          </div>
-        </div>
-      `,
-      email: `
-        <div class="row">
-          <div>
-            <label for="s-email-subject">Email Subject</label>
-            <input id="s-email-subject" type="text" name="email_subject" />
-          </div>
-          <div></div>
-        </div>
-        <div>
-          <label for="s-email-message">Email Message</label>
-          <textarea id="s-email-message" name="email_message" placeholder="Paste or summarize your email"></textarea>
-        </div>
-      `,
-      text: `
-        <div>
-          <label for="s-text-message">Text Message</label>
-          <textarea id="s-text-message" name="text_message" placeholder="SMS / iMessage content"></textarea>
-        </div>
-      `,
-      slack: `
-        <div class="row">
-          <div>
-            <label for="s-slack-handle">Slack Handle</label>
-            <input id="s-slack-handle" type="text" name="slack_handle" placeholder="@username" />
-          </div>
-          <div></div>
-        </div>
-        <div>
-          <label for="s-slack-message">Message</label>
-          <textarea id="s-slack-message" name="slack_message" placeholder="Slack message body"></textarea>
-        </div>
-      `
-    };
+    // -------- Mode templates (kept empty to preserve structure)
+    const templates = { call: ``, email: ``, text: ``, slack: `` };
 
     function ensureMode(mode){
       const valid = ['call','email','text','slack'];
       const m = valid.includes(mode) ? mode : 'call';
-      // update bubbles
       bubbleButtons().forEach(btn => {
         const active = btn.dataset.mode === m;
         btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         btn.setAttribute('aria-selected', active ? 'true' : 'false');
       });
-      // inject fields
       modeFields.innerHTML = templates[m];
-      // (No hash updates)
     }
 
     bubbleButtons().forEach(btn => {
       btn.addEventListener('click', () => ensureMode(btn.dataset.mode));
     });
+
+    // -------- Primary Issue: show/hide "Other" text boxes
+    function wirePrimaryIssue(selectId, wrapId){
+      const sel = document.getElementById(selectId);
+      const wrap = document.getElementById(wrapId);
+      if(!sel || !wrap) return;
+      const sync = () => {
+        const v = sel.value.trim().toLowerCase();
+        wrap.style.display = (v === 'other') ? 'block' : 'none';
+      };
+      sel.addEventListener('change', sync);
+      sync();
+    }
+    wirePrimaryIssue('g-primary','g-primary-other-wrap');
+    wirePrimaryIssue('s-primary','s-primary-other-wrap');
 
     // -------- Dummy submit handlers (prevent page reload for now)
     function handleGuestSubmit(e){
@@ -558,8 +677,8 @@
     }
     function handleStaffSubmit(e){
       e.preventDefault();
-      const currentMode = (location.hash || '#staff-call').split('-')[1] || 'call';
-      alert('Logged a ' + currentMode + ' (demo).');
+      const active = bubbleButtons().find(b => b.getAttribute('aria-pressed') === 'true')?.dataset.mode || 'call';
+      alert('Logged entry (' + active + ') (demo).');
       return false;
     }
 
