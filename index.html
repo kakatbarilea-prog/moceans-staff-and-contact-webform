@@ -143,6 +143,78 @@
   text-align: right;
 }
 
+  /* ===== NEW: Navigator cards grid ===== */
+  .cards-outer{
+    padding-left: clamp(16px, 4vw, 32px);
+    padding-right: clamp(16px, 4vw, 32px);
+    padding-top: 16px;
+    padding-bottom: 24px;
+  }
+  .cards-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1100px){
+    .cards-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 700px){
+    .cards-grid{ grid-template-columns: 1fr; }
+  }
+  .nav-card{
+    background:#fff;
+    border:1px solid rgba(0,0,0,.06);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .nav-top{
+    display:grid;
+    grid-template-columns: 64px 1fr;
+    gap:12px;
+    align-items:center;
+  }
+  .nav-top img{
+    width:64px; height:64px; object-fit:cover; border-radius:999px;
+  }
+  .nav-id{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;  /* aligns three lines to fill same height as headshot */
+    height:64px;                    /* match headshot height */
+  }
+  .nav-id .name{ font-weight:700; }
+  .meta-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:center;
+    font-size:14px;
+  }
+  .meta-row .k{ color:#6b7280; }   /* dark gray label */
+  .meta-row .v{ font-weight:700; color:#111827; } /* bold black number/value */
+
+  /* NEW: straight progress line (replaces sparkline) */
+  .progressbar{
+    width:100%;
+    height:10px;
+    margin:10px 0;               /* equal space above and below */
+    background:#eef2f6;          /* track */
+    border-radius:999px;
+    overflow:hidden;
+    position:relative;
+  }
+  .progressfill{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:0;                      /* set via JS */
+    background:#097095;           /* fill */
+    border-radius:999px;
+    transition: width .4s ease;
+  }
+
   /* Main layout */
   main{
     display:flex;
@@ -367,6 +439,13 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ===== NEW: Cards area (initially hidden) ===== -->
+  <section id="assignCards" hidden>
+    <div class="cards-outer">
+      <div class="cards-grid" id="cardsGrid"></div>
     </div>
   </section>
 
@@ -696,6 +775,10 @@
     const assignDate  = document.getElementById('assignDate');
     const assignOwner = document.getElementById('assignOwner');
 
+    // Cards area
+    const assignCards = document.getElementById('assignCards');
+    const cardsGrid   = document.getElementById('cardsGrid');
+
     const staffDynamic = document.getElementById('staffDynamic');
     const bubbleButtons = () => Array.from(staffForm.querySelectorAll('.bubble'));
 
@@ -708,8 +791,9 @@
       if (guestBelow) guestBelow.hidden = isStaff;
       if (staffBelow) staffBelow.hidden = !isStaff;
 
-      // Hide Assign panel if leaving staff state
+      // Hide Assign panel and cards if leaving staff state
       if (!isStaff && assignBar) assignBar.hidden = true;
+      if (!isStaff && assignCards) assignCards.hidden = true;
 
       if(isStaff){ ensureMode('call'); }
     }
@@ -770,6 +854,117 @@
     wirePrimaryIssue('g-primary','g-primary-other-wrap');
     wirePrimaryIssue('s-primary','s-primary-other-wrap');
 
+    // ===== Dummy data for 6 cards
+    const NAVIGATORS = [
+      {
+        headshot:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop',
+        name:'Katrina Lewis',
+        email:'katrina.lewis@moceanscil.org',
+        phone:'(732) 555-2031',
+        active:5, pending:0, lastAssigned:'Oct 9 2025'
+      },
+      {
+        headshot:'https://d34hmiuaex7c0.cloudfront.net/2952/uploads/profile/staffuser/3395/1662043848061.jpeg?q=80&w=256&auto=format&fit=crop',
+        name:'Pete Romano',
+        email:'pete.romano@moceanscil.org',
+        phone:'(732) 555-2114',
+        active:7, pending:1, lastAssigned:'Oct 10 2025'
+      },
+      {
+        headshot:'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=256&auto=format&fit=crop',
+        name:'Maria Rivera',
+        email:'maria.rivera@moceanscil.org',
+        phone:'(732) 555-2147',
+        active:9, pending:2, lastAssigned:'Oct 7 2025'
+      },
+      {
+        headshot:'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=256&auto=format&fit=crop',
+        name:'Deon James',
+        email:'deon.james@moceanscil.org',
+        phone:'(732) 555-2073',
+        active:3, pending:0, lastAssigned:'Oct 8 2025'
+      },
+      {
+        headshot:'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=256&auto=format&fit=crop',
+        name:'Anika Shah',
+        email:'anika.shah@moceanscil.org',
+        phone:'(732) 555-2195',
+        active:6, pending:1, lastAssigned:'Oct 6 2025'
+      },
+      {
+        headshot:'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop',
+        name:'Owen Price',
+        email:'owen.price@moceanscil.org',
+        phone:'(732) 555-2059',
+        active:8, pending:2, lastAssigned:'Oct 5 2025'
+      }
+    ];
+
+    // Helper: render straight progress line proportional to active cases
+    function makeProgressBar(active, maxActive){
+      const wrap = document.createElement('div');
+      wrap.className = 'progressbar';
+      const fill = document.createElement('div');
+      fill.className = 'progressfill';
+      const pct = Math.max(0, Math.min(100, (active / (maxActive || 1)) * 100));
+      fill.style.width = pct + '%';
+      wrap.appendChild(fill);
+      return wrap;
+    }
+
+    function renderCards(){
+      if(!cardsGrid) return;
+      cardsGrid.innerHTML = '';
+
+      // Determine max to scale bars (simple: use highest Active Cases)
+      const maxActive = Math.max(...NAVIGATORS.map(n => n.active), 1);
+
+      NAVIGATORS.forEach(nav => {
+        const card = document.createElement('div');
+        card.className = 'nav-card';
+
+        card.innerHTML = `
+          <div class="nav-top">
+            <img src="${nav.headshot}" alt="${nav.name} headshot">
+            <div class="nav-id">
+              <div class="name">${nav.name}</div>
+              <div class="email">${nav.email}</div>
+              <div class="phone">${nav.phone}</div>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <span class="k">Active Cases</span>
+            <span class="v">${nav.active}</span>
+          </div>
+        `;
+
+        // Insert the straight progress line
+        const bar = makeProgressBar(nav.active, maxActive);
+        card.appendChild(bar);
+
+        // Continue rest of the rows
+        const pending = document.createElement('div');
+        pending.className = 'meta-row';
+        pending.innerHTML = `<span class="k">Pending Acceptances</span><span class="v">${nav.pending}</span>`;
+        card.appendChild(pending);
+
+        const last = document.createElement('div');
+        last.className = 'meta-row';
+        last.style.marginTop = '8px';
+        last.innerHTML = `<span class="k">Last Assigned</span><span class="v">${nav.lastAssigned}</span>`;
+        card.appendChild(last);
+
+        const btn = document.createElement('button');
+        btn.className = 'btn assign-btn';
+        btn.type = 'button';
+        btn.textContent = `Assign to ${nav.name}`;
+        card.appendChild(btn);
+
+        cardsGrid.appendChild(card);
+      });
+    }
+
     // Dummy submit handlers (prevent page reload for now)
     function handleGuestSubmit(e){
       e.preventDefault();
@@ -819,6 +1014,10 @@
 
         // 2) Keep logout link visible so staff can go back if needed
         if (staffBelow) staffBelow.hidden = false;
+
+        // 3) Render and show the cards section
+        renderCards();
+        if (assignCards) assignCards.hidden = false;
 
         // Scroll to top so the new box is visible immediately.
         window.scrollTo({ top: 0, behavior: 'smooth' });
