@@ -82,6 +82,67 @@
     margin:auto;
   }
 
+  /* ===== Assign Navigator area (hidden until staff submit) ===== */
+  .assign-bar{ width:100%; }
+  /* Outer gutters so the box doesn't touch the screen edges */
+  .assign-outer{
+    padding-left: clamp(16px, 4vw, 32px);
+    padding-right: clamp(16px, 4vw, 32px);
+    padding-top: 16px;
+    padding-bottom: 0;
+  }
+  /* The actual white card */
+  .assign-box{
+    background:#fff;
+    border:1px solid rgba(0,0,0,.06);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding:16px 20px;
+  }
+  .assign-grid{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:16px;
+    align-items:start;
+  }
+  .assign-title{
+    margin:0 0 8px 0;
+    font-size:22px;
+    line-height:1.25;
+    font-weight:700;
+  }
+  .chip-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    background:#eef2f6;
+    border:1px solid #d9dee3;
+    color:#334155;
+    font-weight:700;
+    font-size:14px;
+    padding:6px 10px;
+    border-radius:999px;
+  }
+  /* Right side metadata: aligned starting point with a 2-col grid */
+  .assign-right{
+    display:grid;
+    grid-template-columns: max-content 1fr;
+    gap:6px 10px;
+    align-items:start;
+  }
+  .assign-right .k{ color:#374151; font-weight:700; }
+  .assign-right .v{ color:var(--ink); }
+  @media (max-width: 700px){
+    .assign-grid{ grid-template-columns: 1fr; }
+    .assign-right{ grid-template-columns: max-content 1fr; }
+  }
+.assign-right .v{
+  justify-self: end;
+  text-align: right;
+}
+
   /* Main layout */
   main{
     display:flex;
@@ -201,8 +262,8 @@
 
   /* Footer */
   footer.site-footer{
-    background:var(--footer-bg);
-    color:var(--footer-ink);
+    background:#2f2e2e;
+    color:#ffffff;
   }
   .footer-inner{
     max-width:var(--footer-maxw);
@@ -245,7 +306,7 @@
 
   .footer-right{
     text-align:right;
-    color:var(--footer-ink);
+    color:#ffffff;
   }
   .footer-right p{ margin:0 0 6px 0 }
   .footer-right .muted{ color:var(--footer-ink-muted) }
@@ -285,6 +346,29 @@
       <img src="https://d34hmiuaex7c0.cloudfront.net/2952/uploads/cmaspages/gallery/galleryitem_1759958511694.png" alt="MOCEANS Logo">
     </a>
   </header>
+
+  <!-- ===== Assign Navigator Panel (initially hidden) ===== -->
+  <section id="assignBar" class="assign-bar" hidden>
+    <div class="assign-outer">
+      <div class="assign-box">
+        <div class="assign-grid">
+          <div>
+            <h2 class="assign-title" id="assignTitle">Assign Navigator for </h2>
+            <div class="chip-row">
+              <span class="chip" id="chipPriority">Emergency</span>
+              <span class="chip" id="chipSource">Source: Call</span>
+              <span class="chip" id="chipPrimary">Primary Issue: —</span>
+              <span class="chip" id="chipCounty">City/County: —</span>
+            </div>
+          </div>
+          <div class="assign-right" aria-label="Submission metadata">
+            <span class="k">Inquiry Received Date:</span><span class="v" id="assignDate"></span>
+            <span class="k">Entered By:</span><span class="v" id="assignOwner">[owner_firstname] [owner_lastname]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Main -->
   <main role="main">
@@ -589,6 +673,10 @@
 
   <!-- Script -->
   <script>
+    // -------- Editable owner (placeholder shown on Assign bar)
+    const OWNER_FIRSTNAME = '[owner_firstname]';
+    const OWNER_LASTNAME  = '[owner_lastname]';
+
     // -------- State toggle helpers
     const guestForm = document.getElementById('guestForm');
     const staffForm = document.getElementById('staffForm');
@@ -598,6 +686,17 @@
     const staffBelow = document.getElementById('staffBelow');
     const logoutLink = document.getElementById('logoutLink');
 
+    // Assign Navigator panel refs
+    const assignBar   = document.getElementById('assignBar');
+    const assignTitle = document.getElementById('assignTitle');
+    const chipPriority= document.getElementById('chipPriority');
+    const chipSource  = document.getElementById('chipSource');
+    const chipPrimary = document.getElementById('chipPrimary');
+    const chipCounty  = document.getElementById('chipCounty');
+    const assignDate  = document.getElementById('assignDate');
+    const assignOwner = document.getElementById('assignOwner');
+
+    const staffDynamic = document.getElementById('staffDynamic');
     const bubbleButtons = () => Array.from(staffForm.querySelectorAll('.bubble'));
 
     function showState(state){
@@ -609,8 +708,10 @@
       if (guestBelow) guestBelow.hidden = isStaff;
       if (staffBelow) staffBelow.hidden = !isStaff;
 
+      // Hide Assign panel if leaving staff state
+      if (!isStaff && assignBar) assignBar.hidden = true;
+
       if(isStaff){ ensureMode('call'); }
-      // (No auto-scroll)
     }
 
     function syncFromHash(){
@@ -636,7 +737,7 @@
       });
     }
 
-    // -------- Mode templates (kept empty to preserve structure)
+    // Mode templates (kept empty to preserve structure)
     const templates = { call: ``, email: ``, text: ``, slack: `` };
 
     function ensureMode(mode){
@@ -654,7 +755,7 @@
       btn.addEventListener('click', () => ensureMode(btn.dataset.mode));
     });
 
-    // -------- Primary Issue: show/hide "Other" text boxes
+    // Primary Issue: show/hide "Other" text boxes
     function wirePrimaryIssue(selectId, wrapId){
       const sel = document.getElementById(selectId);
       const wrap = document.getElementById(wrapId);
@@ -669,16 +770,60 @@
     wirePrimaryIssue('g-primary','g-primary-other-wrap');
     wirePrimaryIssue('s-primary','s-primary-other-wrap');
 
-    // -------- Dummy submit handlers (prevent page reload for now)
+    // Dummy submit handlers (prevent page reload for now)
     function handleGuestSubmit(e){
       e.preventDefault();
       alert('Submitted Contact / Activity Form (demo).');
       return false;
     }
+
     function handleStaffSubmit(e){
       e.preventDefault();
-      const active = bubbleButtons().find(b => b.getAttribute('aria-pressed') === 'true')?.dataset.mode || 'call';
-      alert('Logged entry (' + active + ') (demo).');
+
+      // Read active source (mode bubble)
+      const activeMode = bubbleButtons().find(b => b.getAttribute('aria-pressed') === 'true')?.dataset.mode || 'call';
+      const sourceLabel = { call:'Call', email:'Email', text:'Text', slack:'Slack' }[activeMode] || 'Call';
+
+      // Read form values
+      const first = document.getElementById('s-first')?.value?.trim() || '';
+      const last  = document.getElementById('s-last')?.value?.trim() || '';
+
+      // Priority radio
+      const fd = new FormData(staffDynamic);
+      const priority = (fd.get('s_priority') || '').toString();
+
+      // Primary issue & county/city
+      const primary = document.getElementById('s-primary')?.value || '';
+      const county  = document.getElementById('s-county-city')?.value?.trim() || '';
+
+      // Fill Assign Navigator bar
+      if (assignBar) {
+        assignTitle.textContent = `Assign Navigator for: ${first || '—'} ${last || ''}`.trim();
+        chipPriority.textContent = priority || '—';
+        chipSource.textContent   = `Source: ${sourceLabel}`;
+        chipPrimary.textContent  = `Primary Issue: ${primary || '—'}`;
+        chipCounty.textContent   = `City/County: ${county || '—'}`;
+
+        // Date/time now (local)
+        const now = new Date();
+        assignDate.textContent = now.toLocaleString();
+
+        // Owner placeholder
+        assignOwner.textContent = `${OWNER_FIRSTNAME} ${OWNER_LASTNAME}`;
+
+        // Show panel
+        assignBar.hidden = false;
+
+        // 1) Hide the form after submit (per request)
+        staffForm.hidden = true;
+
+        // 2) Keep logout link visible so staff can go back if needed
+        if (staffBelow) staffBelow.hidden = false;
+
+        // Scroll to top so the new box is visible immediately.
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
       return false;
     }
 
