@@ -3,51 +3,47 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MOCEANS — Contact & Activity Form</title>
+<title>MOCEANS — Header & Footer Scaffold</title>
 
 <style>
+  /* =========================
+     THEME & QUICK TWEAKS
+     ========================= */
   :root{
     --page-bg:#ffffff;
     --ink:#1f2937;
+
+    /* >>> Adjust the header logo width here. Height will auto-scale. */
     --logo-width: 220px;
+
+    /* Footer */
     --footer-bg:#2f2e2e;
     --footer-ink:#ffffff;
     --footer-ink-muted: rgba(255,255,255,.8);
     --footer-link:#ffffff;
     --footer-link-hover:#ffffff;
     --footer-line: rgba(255,255,255,.18);
+
+    /* Layout */
     --container-pad: 20px;
-    --footer-maxw: 1200px;
+    --footer-maxw: 1200px; /* optional max-width for inner footer content */
     --gap: 16px;
-    --card-maxw: 820px;
-    --card-pad: 22px;
-    --card-radius: 14px;
-    --card-shadow: 0 20px 40px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
-    --field-bg:#ffffff;
-    --field-line:#e6e8eb;
-    --field-radius: 10px;
-    --btn-bg:#097095;
-    --btn-bg-hover:#085a77;
-    --btn-ink:#ffffff;
-    --bubble-bg:#f3f5f7;
-    --bubble-ink:#334155;
-    --bubble-active-bg:#097095;
-    --bubble-active-ink:#ffffff;
-    --bubble-border:#d9dee3;
   }
 
+  /* Base */
   *{box-sizing:border-box}
   html, body{
     margin:0;
     background:var(--page-bg);
     color:var(--ink);
-    font-family: Calibri, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height:1.5;
   }
   img{display:block; max-width:100%; height:auto}
   a{color:var(--footer-link); text-decoration:none}
   a:hover{opacity:.9}
 
+  /* Header */
   header.site-header{
     width:100%;
     background:#ffffff;
@@ -56,569 +52,776 @@
     justify-content:center;
     padding:18px 16px;
     border-bottom:1px solid #ececec;
-    position:sticky;
+    position:sticky; /* so you can see it while you scroll the long white space */
     top:0;
     z-index:10;
   }
-  .site-logo{ width:var(--logo-width); margin:auto; }
-
-  .assign-bar{ width:100%; }
-  .assign-outer{
-    padding-left: clamp(16px, 4vw, 32px);
-    padding-right: clamp(16px, 4vw, 32px);
-    padding-top: 16px;
-    padding-bottom: 0;
+  .site-logo{
+    width:var(--logo-width); /* <<< change this in :root to resize */
+    margin:auto;
   }
 
-  .assign-back{
-    padding-left: clamp(16px, 4vw, 32px);
-    padding-right: clamp(16px, 4vw, 32px);
-    padding-top: 16px;
-    padding-bottom: 0;
-  }
-  .assign-back a{
-    display:inline-block;
-    font-weight:700;
-    color:#097095;
-    text-decoration:none;
-  }
-  .assign-back a:hover{ text-decoration:underline; }
-
-  .assign-box{
-    background:#fff;
-    border:1px solid rgba(0,0,0,.06);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-    padding:16px 20px;
-  }
-  .assign-grid{
-    display:grid;
-    grid-template-columns: 1fr auto;
-    gap:16px;
-    align-items:start;
-  }
-  .assign-title{
-    margin:0 0 8px 0;
-    font-size:22px;
-    line-height:1.25;
-    font-weight:700;
-  }
-  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
-  .chip{
-    background:#eef2f6;
-    border:1px solid #d9dee3;
-    color:#334155;
-    font-weight:700;
-    font-size:14px;
-    padding:6px 10px;
-    border-radius:999px;
-  }
-  .assign-right{
-    display:grid;
-    grid-template-columns: max-content 1fr;
-    gap:6px 10px;
-    align-items:start;
-  }
-  .assign-right .k{ color:#374151; font-weight:700; }
-  .assign-right .v{ color:var(--ink); }
-  @media (max-width: 700px){
-    .assign-grid{ grid-template-columns: 1fr; }
-    .assign-right{ grid-template-columns: max-content 1fr; }
-  }
-  .assign-right .v{ justify-self: end; text-align: right; }
-
-  .cards-outer{
-    padding-left: clamp(16px, 4vw, 32px);
-    padding-right: clamp(16px, 4vw, 32px);
-    padding-top: 16px;
-    padding-bottom: 24px;
-  }
-  .cards-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  @media (max-width: 1100px){
-    .cards-grid{ grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 700px){
-    .cards-grid{ grid-template-columns: 1fr; }
-  }
-  .nav-card{
-    background:#fff;
-    border:1px solid rgba(0,0,0,.06);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-    padding:16px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-  .nav-top{
-    display:grid;
-    grid-template-columns: 64px 1fr;
-    gap:12px;
-    align-items:center;
-  }
-  .nav-top img{
-    width:64px; height:64px; object-fit:cover; border-radius:999px;
-  }
-  .nav-id{
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    height:64px;
-  }
-  .nav-id .name{ font-weight:700; }
-  .spec-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:2px;
-  }
-  .spec{
-    background:#f3f5f7;
-    border:1px solid #d9dee3;
-    color:#334155;
-    font-weight:700;
-    font-size:12px;
-    padding:6px 10px;
-    border-radius:999px;
-    white-space:nowrap;
-  }
-
-  .meta-row{
-    display:grid;
-    grid-template-columns: 1fr auto;
-    align-items:center;
-    font-size:14px;
-  }
-  .meta-row .k{ color:#6b7280; }
-  .meta-row .v{ font-weight:700; color:#111827; }
-
-  .progressbar{
-    width:100%;
-    height:10px;
-    margin:10px 0;
-    background:#eef2f6;
-    border-radius:999px;
-    overflow:hidden;
-    position:relative;
-  }
-  .progressfill{
-    position:absolute;
-    left:0; top:0; bottom:0;
-    width:0;
-    background:#097095;
-    border-radius:999px;
-    transition: width .4s ease;
-  }
-
+  /* White space to scroll (original scaffold) */
   main{
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    padding: 32px 16px 60px;
-    min-height: 60vh;
+    min-height:180vh; /* <<< this will be overridden below */
     background:#ffffff;
   }
 
-  .form-wrap{ width:100%; max-width:var(--card-maxw); }
-  .card{
-    background:#fff;
-    border:1px solid rgba(0,0,0,.06);
-    border-radius:var(--card-radius);
-    box-shadow:var(--card-shadow);
-    padding:var(--card-pad);
+  /* Footer */
+  footer.site-footer{
+    background:var(--footer-bg);
+    color:var(--footer-ink);
+  }
+  .footer-inner{
+    max-width:var(--footer-maxw);
+    margin:0 auto;
+    padding:32px var(--container-pad);
   }
 
-  h1, h2{ margin:0 0 16px 0; line-height:1.25; font-weight:700; }
-  h1{ font-size:28px }  h2{ font-size:22px }
-
-  .stack{ display:grid; gap:16px }
-  .row{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
-  @media (max-width: 640px){ .row{ grid-template-columns:1fr } }
-
-  label{ font-size:14px; font-weight:600; margin-bottom:6px; display:block; }
-  input[type="text"], input[type="email"], input[type="tel"], input[type="file"], input[type="number"], textarea, select{
-    width:100%; background:var(--field-bg); border:1px solid var(--field-line);
-    border-radius:var(--field-radius); padding:12px 12px; font-size:16px; outline:none;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  select{
-    -webkit-appearance:none; -moz-appearance:none; appearance:none;
-    padding-right:38px;
-    background-image:
-      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23697b8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
-    background-repeat:no-repeat; background-position: right 10px center; background-size:16px;
-  }
-  textarea{ min-height:120px; resize:vertical }
-  input:focus, textarea:focus, select:focus{
-    border-color:#c5d7df; box-shadow:0 0 0 4px rgba(9,112,149,.08);
+  .footer-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:var(--gap);
+    align-items:start;
   }
 
-  .actions{ margin-top:8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  .btn{
-    appearance:none; border:none; cursor:pointer; background:var(--btn-bg); color:var(--btn-ink);
-    padding:12px 18px; border-radius:10px; font-weight:700; font-size:16px;
-    transition:transform .08s ease, background .15s ease, box-shadow .15s ease;
-    box-shadow:0 6px 16px rgba(9,112,149,.25);
+  /* Left block: social + © */
+  .footer-left{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
   }
-  .btn:hover{ background:var(--btn-bg-hover) }
-  .btn:active{ transform: translateY(1px) }
-
-  .below-card{ margin-top:12px; text-align:center; font-size:15px; }
-  .below-card a{ color:#097095; font-weight:700; text-decoration:underline; }
-
-  .bubble-row{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 14px 0; }
-  .bubble{
-    display:inline-flex; align-items:center; justify-content:center;
-    padding:10px 14px; border-radius:999px; border:1px solid var(--bubble-border);
-    background:var(--bubble-bg); color:var(--bubble-ink);
-    font-weight:700; cursor:pointer; user-select:none;
-    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  .socials{
+    display:flex;
+    align-items:center;
+    gap:14px;
   }
-  .bubble[aria-pressed="true"]{ background:var(--bubble-active-bg); color:var(--bubble-active-ink); border-color:transparent; }
-
-  .divider{ height:1px; background:#eceff2; margin:14px 0 4px 0 }
-
-  /* keep button at bottom */
-  .nav-card { display:flex; flex-direction:column; }
-  .assign-btn { margin-top: auto; margin-bottom: 0; }
-
-  /* NEW: fixed-height top wrapper so progress bars align */
-  .fixed-top{ min-height: 170px; display:flex; flex-direction:column; gap:8px; } /* NEW */
-
-  footer.site-footer{ background:#2f2e2e; color:#ffffff; }
-  .footer-inner{ max-width:var(--footer-maxw); margin:0 auto; padding:32px var(--container-pad); }
-  .footer-row{ display:grid; grid-template-columns: 1fr 1fr; gap:var(--gap); align-items:start; }
-  .footer-left{ display:flex; flex-direction:column; gap:14px; }
-  .socials{ display:flex; align-items:center; gap:14px; }
   .social-link{
-    width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center;
-    border-radius:6px; transition:transform .15s ease, opacity .15s ease;
+    width:28px; height:28px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:6px;
+    transition:transform .15s ease, opacity .15s ease;
   }
   .social-link:hover{ transform: translateY(-1px); opacity:.9 }
   .social-link svg{ width:22px; height:22px; fill:#ffffff }
-  .copyright{ font-size:14px; color:var(--footer-ink-muted); }
-  .footer-right{ text-align:right; color:#ffffff; }
-  .footer-right p{ margin:0 0 6px 0 }
-  .footer-right .muted{ color:var(--footer-ink-muted) }
-  .footer-divider{ height:1px; background:var(--footer-line); margin:20px 0; }
-  .footer-bottom{ display:flex; gap:24px; flex-wrap:wrap; justify-content:center; padding-bottom:6px; }
-  .footer-bottom a{ color:var(--footer-link); font-weight:600; }
-  .footer-bottom a:hover{ color:var(--footer-link-hover); text-decoration:underline; }
+
+  .copyright{
+    font-size:14px;
+    color:var(--footer-ink-muted);
+  }
+
+  /* Right block: address & info */
+  .footer-right{
+    text-align:right;
+    color:var(--footer-ink);
+  }
+  .footer-right p{
+    margin:0 0 6px 0;
+  }
+  .footer-right .muted{
+    color:var(--footer-ink-muted);
+  }
+
+  /* Divider */
+  .footer-divider{
+    height:1px;
+    background:var(--footer-line);
+    margin:20px 0;
+  }
+
+  /* Bottom row: policy links side-by-side */
+  .footer-bottom{
+    display:flex;
+    gap:24px;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding-bottom:6px;
+  }
+  .footer-bottom a{
+    color:var(--footer-link);
+    font-weight:600;
+  }
+  .footer-bottom a:hover{
+    color:var(--footer-link-hover);
+    text-decoration:underline;
+  }
+
+  /* Responsive behavior */
   @media (max-width: 820px){
-    .footer-row{ grid-template-columns: 1fr; gap:24px }
-    .footer-right{ text-align:left }
+    .footer-row{
+      grid-template-columns: 1fr;
+      gap:24px;
+    }
+    .footer-right{
+      text-align:left;
+    }
+  }
+</style>
+
+<!-- ====== PAGE CONTENT (FORM + PREVIEW) STYLES ====== -->
+<style>
+  /* >>> Adjust OUTSIDE left/right padding for the two boxes here: */
+  :root{
+    --content-pad-lr: 22px;   /* outside padding on both sides */
+    --content-pad-tb: 22px;   /* outside padding top/bottom */
+    --card: #ffffff;
+    --line: #e5e7eb;
+    --muted: #6b7280;
+    --brand: #097095;         /* buttons + accents per request */
+    --brand-ink: #ffffff;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 28px rgba(0,0,0,.06);
+    --field-h: 44px;
+    --chip-bg: #f3f4f6;
+  }
+
+  /* Override scaffold main height */
+  main{
+    min-height:unset !important;
+    padding: var(--content-pad-tb) var(--content-pad-lr);
+  }
+
+  .content-wrap{
+    width:100%;
+  }
+
+  .two-col{
+    display:grid;
+    grid-template-columns: 7fr 3fr; /* 70 / 30 */
+    gap:24px;
+    align-items:start;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  .card .card-body{
+    padding:20px;
+  }
+  .card h2{
+    margin:0 0 14px 0;
+    font-size:20px;
+    font-weight:700;
+  }
+  .small-heading{
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    color:#374151;
+    margin:18px 0 4px 0;
+  }
+  .subnote{
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 10px 0;
+  }
+  .section-heading{
+    font-size:16px;
+    font-weight:700;
+    margin:16px 0 10px 0;
+  }
+
+  /* Form */
+  form .row-2{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+  }
+  form .row-3{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:12px;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .field label{
+    font-size:14px;
+    font-weight:600;
+  }
+  .field select, .field input[type="text"], .field input[type="email"], .field input[type="tel"], .field input[type="number"], .field input[type="date"], .field textarea{
+    height:var(--field-h);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:0 12px;
+    font-size:14px;
+    outline:none;
+    background:#fff;
+  }
+  .field textarea{
+    height:120px;
+    padding:12px;
+    resize:vertical;
+  }
+
+  /* Checkbox grids — 3 per row, wrap on small */
+  .checkbox-grid{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap:10px 12px;
+    margin:8px 0 6px;
+  }
+  .checkbox-grid .check{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:14px;
+  }
+  .checkbox-grid input[type="checkbox"]{
+    margin-top:2px;
+    transform:translateY(1px);
+  }
+
+  /* Quick Flags card look */
+  .boxed{
+    background:#fafafa;
+    border:1px dashed #d1d5db;
+    border-radius:12px;
+    padding:14px;
+  }
+
+  /* Buttons */
+  .actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    height:40px;
+    padding:0 16px;
+    border-radius:10px;
+    font-weight:700;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .05s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn-outline{
+    background:#fff;
+    color:var(--brand);
+    border-color:var(--brand);
+  }
+  .btn-outline:hover{
+    background:#f0f9ff;
+  }
+  .btn-brand{
+    background:var(--brand);
+    color:var(--brand-ink);
+  }
+  .btn-brand:hover{
+    background:#0a86ae;
+  }
+
+  /* Preview */
+  .preview .label{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:2px;
+  }
+  .preview .value{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:10px;
+    word-break:break-word;
+  }
+  .divider{
+    height:1px;
+    background:var(--line);
+    margin:12px 0 14px 0;
+  }
+  .kv{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:8px 12px;
+  }
+  .kv .name{
+    font-weight:700;
+  }
+  .kv .meta{
+    color:var(--muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 1080px){
+    .two-col{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px){
+    form .row-2 { grid-template-columns: 1fr; }
+    form .row-3 { grid-template-columns: 1fr; }
+    .checkbox-grid{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 460px){
+    .checkbox-grid{ grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+  <!-- Header (Centered Logo) -->
   <header class="site-header" role="banner">
     <a href="/" class="site-logo" aria-label="MOCEANS Home">
       <img src="https://d34hmiuaex7c0.cloudfront.net/2952/uploads/cmaspages/gallery/galleryitem_1759958511694.png" alt="MOCEANS Logo">
     </a>
   </header>
 
-  <nav class="assign-back" id="assignBack" hidden>
-    <a href="#" id="backLink">← Go Back</a>
-  </nav>
+  <!-- Main Content: FORM (left) + PREVIEW (right) -->
+  <main role="main" aria-label="Intake form and live preview">
+    <div class="content-wrap">
+      <div class="two-col">
 
-  <section id="assignBar" class="assign-bar" hidden>
-    <div class="assign-outer">
-      <div class="assign-box">
-        <div class="assign-grid">
-          <div>
-            <h2 class="assign-title" id="assignTitle">Assign Navigator for </h2>
-            <div class="chip-row">
-              <span class="chip" id="chipPriority">Emergency</span>
-              <span class="chip" id="chipSource">Source: Call</span>
-              <span class="chip" id="chipPrimary">Primary Issue: —</span>
-              <span class="chip" id="chipCounty">City/County: —</span>
+        <!-- =========================
+             LEFT: FORM
+             ========================= -->
+        <section class="card" aria-labelledby="formTitle">
+          <div class="card-body">
+            <h2 id="formTitle">CIL Intake — Call Log</h2>
+            <form id="intakeForm">
+
+              <!-- Caller / Intake -->
+              <div class="row-2">
+                <div class="field">
+                  <label for="callerType">Caller Type</label>
+                  <select id="callerType" name="callerType">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Individual with a Disability (Consumer)</option>
+                    <option>Family Member / Caregiver</option>
+                    <option>Referring Agency / Partner</option>
+                    <option>Information / Referral (General Public)</option>
+                    <option>Volunteer / Donor / Community Member</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="intakeSource">Intake Source</label>
+                  <select id="intakeSource" name="intakeSource">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Direct Phone Call</option>
+                    <option>Voicemail</option>
+                    <option>Email</option>
+                    <option>Web Form</option>
+                    <option>Walk-in</option>
+                    <option>Slack (AnswerConnect)</option>
+                    <option>Referral — Hospital/Clinic</option>
+                    <option>Referral — Social Services / County</option>
+                    <option>Referral — School/College</option>
+                    <option>Referral — Veteran Services</option>
+                    <option>Referral — Housing Authority/Landlord</option>
+                    <option>Referral — Nonprofit/Advocacy</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+<br>
+              <!-- Basic details -->
+              <div class="row-2">
+                <div class="field">
+                  <label for="firstName">First Name</label>
+                  <input id="firstName" name="firstName" type="text" />
+                </div>
+                <div class="field">
+                  <label for="lastName">Last Name</label>
+                  <input id="lastName" name="lastName" type="text" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" />
+                </div>
+                <div class="field">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="age">Age</label>
+                  <input id="age" name="age" type="number" min="0" />
+                </div>
+                <div class="field">
+                  <label for="gender">Gender</label>
+                  <input id="gender" name="gender" type="text" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="county">County</label>
+                  <input id="county" name="county" type="text" />
+                </div>
+                <div class="field">
+                  <label for="city">City/Municipality</label>
+                  <input id="city" name="city" type="text" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="contactMethod">Preferred Contact Method</label>
+                  <select id="contactMethod" name="contactMethod">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Phone Call</option>
+                    <option>Text Message</option>
+                    <option>Email</option>
+                    <option>Postal Mail</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="primaryLang">Primary Language</label>
+                  <select id="primaryLang" name="primaryLang">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>American Sign Language (ASL)</option>
+                    <option>Arabic</option>
+                    <option>Chinese</option>
+                    <option>Portuguese</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+<br>
+              <div class="field">
+                <label for="primary704">Primary Disability Category (704)</label>
+                <select id="primary704" name="primary704">
+                  <option value="" selected disabled>Choose…</option>
+                  <option>Physical</option>
+                  <option>Cognitive / Developmental</option>
+                  <option>Mental / Emotional</option>
+                  <option>Sensory — Hearing</option>
+                  <option>Sensory — Vision</option>
+                  <option>Multiple Disabilities</option>
+                  <option>Other / Unknown</option>
+                </select>
+              </div>
+<br>
+              <!-- Specific Conditions -->
+              <div class="small-heading">Specific Condition(s) (Internal)</div>
+              <p class="subnote">Select all that apply. Use with the 704 category for compliance.</p>
+
+              <!-- Physical -->
+              <div class="section-heading">Physical</div>
+              <div class="checkbox-grid" data-group="cond-physical">
+                <label class="check"><input type="checkbox" value="Spinal cord injury"> Spinal cord injury</label>
+                <label class="check"><input type="checkbox" value="Amputation"> Amputation</label>
+                <label class="check"><input type="checkbox" value="Arthritis"> Arthritis</label>
+                <label class="check"><input type="checkbox" value="Cerebral palsy"> Cerebral palsy</label>
+                <label class="check"><input type="checkbox" value="Muscular dystrophy"> Muscular dystrophy</label>
+                <label class="check"><input type="checkbox" value="Multiple sclerosis"> Multiple sclerosis</label>
+                <label class="check"><input type="checkbox" value="Spina bifida"> Spina bifida</label>
+                <label class="check"><input type="checkbox" value="Stroke (residual)"> Stroke (residual)</label>
+                <label class="check"><input type="checkbox" value="Chronic pain"> Chronic pain</label>
+              </div>
+
+              <!-- Cognitive / Developmental -->
+              <div class="section-heading">Cognitive / Developmental</div>
+              <div class="checkbox-grid" data-group="cond-cognitive">
+                <label class="check"><input type="checkbox" value="Intellectual disability"> Intellectual disability</label>
+                <label class="check"><input type="checkbox" value="Autism spectrum disorder"> Autism spectrum disorder</label>
+                <label class="check"><input type="checkbox" value="Learning disability"> Learning disability</label>
+                <label class="check"><input type="checkbox" value="ADHD"> ADHD</label>
+                <label class="check"><input type="checkbox" value="Traumatic brain injury (TBI)"> Traumatic brain injury (TBI)</label>
+                <label class="check"><input type="checkbox" value="Other cognitive impairment"> Other cognitive impairment</label>
+              </div>
+
+              <!-- Mental / Emotional -->
+              <div class="section-heading">Mental / Emotional</div>
+              <div class="checkbox-grid" data-group="cond-mental">
+                <label class="check"><input type="checkbox" value="Depression"> Depression</label>
+                <label class="check"><input type="checkbox" value="Anxiety"> Anxiety</label>
+                <label class="check"><input type="checkbox" value="Bipolar disorder"> Bipolar disorder</label>
+                <label class="check"><input type="checkbox" value="PTSD"> PTSD</label>
+                <label class="check"><input type="checkbox" value="Schizophrenia / Schizoaffective"> Schizophrenia / Schizoaffective</label>
+                <label class="check"><input type="checkbox" value="Other mental/emotional"> Other mental/emotional</label>
+              </div>
+
+              <!-- Sensory — Hearing -->
+              <div class="section-heading">Sensory — Hearing</div>
+              <div class="checkbox-grid" data-group="cond-hearing">
+                <label class="check"><input type="checkbox" value="Deaf"> Deaf</label>
+                <label class="check"><input type="checkbox" value="Hard of hearing"> Hard of hearing</label>
+                <label class="check"><input type="checkbox" value="Speech / communication"> Speech / communication</label>
+              </div>
+
+              <!-- Sensory — Vision -->
+              <div class="section-heading">Sensory — Vision</div>
+              <div class="checkbox-grid" data-group="cond-vision">
+                <label class="check"><input type="checkbox" value="Blind"> Blind</label>
+                <label class="check"><input type="checkbox" value="Low vision"> Low vision</label>
+                <label class="check"><input type="checkbox" value="Diabetic retinopathy"> Diabetic retinopathy</label>
+              </div>
+
+              <!-- Chronic / Systemic -->
+              <div class="section-heading">Chronic / Systemic</div>
+              <div class="checkbox-grid" data-group="cond-chronic">
+                <label class="check"><input type="checkbox" value="Diabetes"> Diabetes</label>
+                <label class="check"><input type="checkbox" value="Heart disease"> Heart disease</label>
+                <label class="check"><input type="checkbox" value="Respiratory (COPD/asthma)"> Respiratory (COPD/asthma)</label>
+                <label class="check"><input type="checkbox" value="Kidney disease"> Kidney disease</label>
+                <label class="check"><input type="checkbox" value="Cancer"> Cancer</label>
+                <label class="check"><input type="checkbox" value="HIV/AIDS"> HIV/AIDS</label>
+                <label class="check"><input type="checkbox" value="Epilepsy / seizure"> Epilepsy / seizure</label>
+                <label class="check"><input type="checkbox" value="Neurological (Parkinson’s/ALS)"> Neurological (Parkinson’s/ALS)</label>
+                <label class="check"><input type="checkbox" value="Long COVID / post-viral"> Long COVID / post-viral</label>
+              </div>
+
+              <!-- Other -->
+              <div class="section-heading">Other</div>
+              <div class="checkbox-grid" data-group="cond-other">
+                <label class="check"><input type="checkbox" value="Age-related disability"> Age-related disability</label>
+                <label class="check"><input type="checkbox" value="Substance use disorder"> Substance use disorder</label>
+                <label class="check"><input type="checkbox" value="Temporary disability"> Temporary disability</label>
+                <label class="check"><input type="checkbox" value="Other / not listed"> Other / not listed</label>
+              </div>
+<br>
+              <!-- Call Reason / Services Requested -->
+              <div class="small-heading" style="margin-top:18px;">Call Reason / Services Requested</div>
+
+              <div class="section-heading">Independent Living Core Services</div>
+              <div class="checkbox-grid" data-group="svc-il">
+                <label class="check"><input type="checkbox" value="Information & Referral"> Information & Referral</label>
+                <label class="check"><input type="checkbox" value="Independent Living Skills Training"> Independent Living Skills Training</label>
+                <label class="check"><input type="checkbox" value="Peer Support / Counseling"> Peer Support / Counseling</label>
+                <label class="check"><input type="checkbox" value="Individual Advocacy"> Individual Advocacy</label>
+                <label class="check"><input type="checkbox" value="Transition (Youth)"> Transition (Youth)</label>
+                <label class="check"><input type="checkbox" value="Transition (Nursing Home Diversion)"> Transition (Nursing Home Diversion)</label>
+                <label class="check"><input type="checkbox" value="Transition (Institution → Community)"> Transition (Institution → Community)</label>
+              </div>
+
+              <div class="section-heading">Housing & Environment</div>
+              <div class="checkbox-grid" data-group="svc-housing">
+                <label class="check"><input type="checkbox" value="Housing search"> Housing search</label>
+                <label class="check"><input type="checkbox" value="Home modification"> Home modification</label>
+                <label class="check"><input type="checkbox" value="Utility assistance"> Utility assistance</label>
+              </div>
+
+              <div class="section-heading">Mobility & Transportation</div>
+              <div class="checkbox-grid" data-group="svc-transport">
+                <label class="check"><input type="checkbox" value="Paratransit enrollment"> Paratransit enrollment</label>
+                <label class="check"><input type="checkbox" value="Transportation coordination"> Transportation coordination</label>
+              </div>
+
+              <div class="section-heading">Personal Assistance & Health</div>
+              <div class="checkbox-grid" data-group="svc-health">
+                <label class="check"><input type="checkbox" value="Personal care aide"> Personal care aide</label>
+                <label class="check"><input type="checkbox" value="Attendant management support"> Attendant management support</label>
+                <label class="check"><input type="checkbox" value="Durable medical equipment"> Durable medical equipment</label>
+                <label class="check"><input type="checkbox" value="Assistive technology"> Assistive technology</label>
+              </div>
+
+              <div class="section-heading">Benefits & Income</div>
+              <div class="checkbox-grid" data-group="svc-benefits">
+                <label class="check"><input type="checkbox" value="SSI / SSDI"> SSI / SSDI</label>
+                <label class="check"><input type="checkbox" value="Medicaid / Medicare"> Medicaid / Medicare</label>
+                <label class="check"><input type="checkbox" value="SNAP / TANF / WIC"> SNAP / TANF / WIC</label>
+              </div>
+
+              <div class="section-heading">Education & Employment</div>
+              <div class="checkbox-grid" data-group="svc-edu">
+                <label class="check"><input type="checkbox" value="Vocational Rehabilitation (VR) referral"> Vocational Rehabilitation (VR) referral</label>
+                <label class="check"><input type="checkbox" value="Job readiness / placement"> Job readiness / placement</label>
+                <label class="check"><input type="checkbox" value="Post-secondary accommodations"> Post-secondary accommodations</label>
+              </div>
+
+              <div class="section-heading">Rights & Accessibility</div>
+              <div class="checkbox-grid" data-group="svc-rights">
+                <label class="check"><input type="checkbox" value="ADA / accessibility"> ADA / accessibility</label>
+                <label class="check"><input type="checkbox" value="Legal aid / protection"> Legal aid / protection</label>
+                <label class="check"><input type="checkbox" value="Voter access"> Voter access</label>
+              </div>
+
+              <div class="section-heading">Safety / Urgent</div>
+              <div class="checkbox-grid" data-group="svc-safety">
+                <label class="check"><input type="checkbox" value="Homelessness prevention"> Homelessness prevention</label>
+                <label class="check"><input type="checkbox" value="Food insecurity"> Food insecurity</label>
+                <label class="check"><input type="checkbox" value="Abuse / neglect concern"> Abuse / neglect concern</label>
+              </div>
+<br>
+              <!-- Notes -->
+              <div class="field">
+                <label for="notes">Call Summary / Notes</label>
+                <textarea id="notes" name="notes" placeholder=""></textarea>
+              </div>
+<br>
+              <!-- More questions -->
+              <div class="row-3">
+                <div class="field">
+                  <label for="priority">Priority</label>
+                  <select id="priority" name="priority">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Low</option>
+                    <option>Normal</option>
+                    <option>High</option>
+                    <option>Urgent (24–48h)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="immediateRisk">Immediate Risk</label>
+                  <select id="immediateRisk" name="immediateRisk">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>None reported</option>
+                    <option>Homelessness risk</option>
+                    <option>Food insecurity</option>
+                    <option>Abuse/neglect suspected</option>
+                    <option>Other safety concern</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="consent">Consent to Contact & Share Referrals</label>
+                  <select id="consent" name="consent">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Yes — contact & share with partners as needed</option>
+                    <option>Yes — contact only (no sharing)</option>
+                    <option>No — contact consumer only</option>
+                  </select>
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="followType">Follow-up Type</label>
+                  <select id="followType" name="followType">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>One-time check-in</option>
+                    <option>Weekly until resolved</option>
+                    <option>Monthly status update</option>
+                    <option>No follow-up requested</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="followDate">Follow-up Target</label>
+                  <input id="followDate" name="followDate" type="date" />
+                </div>
+              </div>
+<br>
+              <div class="field">
+                <label for="assignee">Assign to Navigator</label>
+                <select id="assignee" name="assignee">
+                  <option value="" selected disabled>Choose…</option>
+                  <option>Alex Rivera — alex@agency.org — (555) 201-2211</option>
+                  <option>Brooke Chen — brooke@agency.org — (555) 882-3311</option>
+                  <option>Chris O’Malley — chris@agency.org — (555) 442-6677</option>
+                  <option>Devi Gupta — devi@agency.org — (555) 993-7755</option>
+                  <option>Elena Santos — elena@agency.org — (555) 765-1188</option>
+                  <option>Franklin Lee — franklin@agency.org — (555) 310-9900</option>
+                </select>
+              </div>
+<br>
+              <div class="field">
+                <label for="assignNotes">Assignment Notes (visible to navigator)</label>
+                <textarea id="assignNotes" name="assignNotes" placeholder=""></textarea>
+              </div>
+<br>
+              <!-- Quick Flags / Tags -->
+              <div class="field">
+                <label class="small-heading" style="margin:12px 0 8px;">Quick Flags / Tags</label>
+                <div class="boxed">
+                  <div class="checkbox-grid" data-group="quick-flags">
+                    <label class="check"><input type="checkbox" value="New consumer"> New consumer</label>
+                    <label class="check"><input type="checkbox" value="Returning consumer"> Returning consumer</label>
+                    <label class="check"><input type="checkbox" value="Spanish speaker"> Spanish speaker</label>
+                    <label class="check"><input type="checkbox" value="Veteran"> Veteran</label>
+                    <label class="check"><input type="checkbox" value="Homelessness risk"> Homelessness risk</label>
+                    <label class="check"><input type="checkbox" value="Youth (14–24)"> Youth (14–24)</label>
+                    <label class="check"><input type="checkbox" value="Aging (60+)"> Aging (60+)</label>
+                    <label class="check"><input type="checkbox" value="ASL needed"> ASL needed</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="actions">
+                <button type="button" class="btn btn-outline">Save Draft</button>
+                <button type="submit" class="btn btn-brand">Save & Assign</button>
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+        <!-- =========================
+             RIGHT: PREVIEW
+             ========================= -->
+        <aside class="card preview" aria-labelledby="previewTitle">
+          <div class="card-body">
+            <h2 id="previewTitle">Live Preview</h2>
+
+            <div>
+              <div class="label">Created Date</div>
+              <div class="value" id="pv-created">—</div>
+
+              <div class="label">Caller Type</div>
+              <div class="value" id="pv-caller">—</div>
+
+              <div class="label">Primary Disability Category (704)</div>
+              <div class="value" id="pv-704">—</div>
+
+              <div class="label">Specific Condition(s) (Internal)</div>
+              <div class="value" id="pv-conditions">—</div>
+
+              <div class="label">Call Reason / Services Requested</div>
+              <div class="value" id="pv-services">—</div>
+
+              <div class="label">Priority</div>
+              <div class="value" id="pv-priority">—</div>
+
+              <div class="label">Assigned To</div>
+              <div class="value" id="pv-assignee">—</div>
             </div>
+
+            <div class="divider" aria-hidden="true"></div>
+
+            <div>
+              <div class="section-heading" style="margin:0 0 8px;">Navigator Workload</div>
+              <div class="kv">
+                <div class="name">Alex Rivera</div><div class="meta">12 active · 2 pending</div>
+                <div class="name">Brooke Chen</div><div class="meta">9 active · 3 pending</div>
+                <div class="name">Chris O’Malley</div><div class="meta">6 active · 1 pending</div>
+                <div class="name">Devi Gupta</div><div class="meta">15 active · 4 pending</div>
+                <div class="name">Elena Santos</div><div class="meta">7 active · 0 pending</div>
+                <div class="name">Franklin Lee</div><div class="meta">10 active · 2 pending</div>
+              </div>
+            </div>
+
           </div>
-          <div class="assign-right" aria-label="Submission metadata">
-            <span class="k">Inquiry Received Date:</span><span class="v" id="assignDate"></span>
-            <span class="k">Entered By:</span><span class="v" id="assignOwner">[owner_firstname] [owner_lastname]</span>
-          </div>
-        </div>
+        </aside>
+
       </div>
-    </div>
-  </section>
-
-  <section id="assignCards" hidden>
-    <div class="cards-outer">
-      <div class="cards-grid" id="cardsGrid"></div>
-    </div>
-  </section>
-
-  <main role="main">
-    <div class="form-wrap">
-      <section id="guestForm" class="card" aria-labelledby="guestHeading">
-        <h1 id="guestHeading">Contact / Activity Form</h1>
-        <form class="stack" onsubmit="return handleGuestSubmit(event)">
-          <div>
-            <label>Priority</label>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <label><input type="radio" name="g_priority" value="Emergency"> Emergency</label>
-              <label><input type="radio" name="g_priority" value="Urgent"> Urgent</label>
-              <label><input type="radio" name="g_priority" value="Non-Emergency"> Non-Emergency</label>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="g-first">First Name</label>
-              <input id="g-first" type="text" name="first_name" autocomplete="given-name" />
-            </div>
-            <div>
-              <label for="g-last">Last Name</label>
-              <input id="g-last" type="text" name="last_name" autocomplete="family-name" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="g-email">Email</label>
-              <input id="g-email" type="email" name="email" autocomplete="email" />
-            </div>
-            <div>
-              <label for="g-phone">Phone</label>
-              <input id="g-phone" type="tel" name="phone" autocomplete="tel" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="g-preferred">Preferred Contact Method</label>
-              <select id="g-preferred" name="preferred_contact_method">
-                <option value="">Please select</option>
-                <option>Phone</option>
-                <option>Email</option>
-                <option>Text</option>
-                <option>No preference</option>
-              </select>
-            </div>
-            <div>
-              <label for="g-gender">Gender</label>
-              <select id="g-gender" name="gender">
-                <option value="">Please select</option>
-                <option>Female</option>
-                <option>Male</option>
-                <option>Non-binary</option>
-                <option>Prefer not to say</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="g-age">Age</label>
-              <input id="g-age" type="number" name="age" min="0" />
-            </div>
-            <div>
-              <label for="g-county-city">County or City</label>
-              <input id="g-county-city" type="text" name="county_or_city" />
-            </div>
-          </div>
-
-          <div>
-            <label for="g-primary">Primary Issue</label>
-            <select id="g-primary" name="primary_issue">
-              <option value="">Please select</option>
-              <option>Housing Assistance</option>
-              <option>Employment</option>
-              <option>Transportation</option>
-              <option>Personal Care Support</option>
-              <option>Assistive Technology</option>
-              <option>Benefits / Financial Assistance</option>
-              <option>Education / Training</option>
-              <option>Advocacy / Legal Rights</option>
-              <option>Health & Wellness</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <div id="g-primary-other-wrap" style="display:none;">
-            <label for="g-primary-other">Please specify (Other)</label>
-            <input id="g-primary-other" type="text" name="primary_issue_other" />
-          </div>
-
-          <div>
-            <label for="g-summary">Summary of Need</label>
-            <textarea id="g-summary" name="summary_of_need"></textarea>
-          </div>
-
-          <div>
-            <label for="g-notes">Additional Notes</label>
-            <textarea id="g-notes" name="additional_notes"></textarea>
-          </div>
-
-          <div>
-            <label for="g-files">Share any attachments</label>
-            <input id="g-files" type="file" name="attachments" multiple />
-          </div>
-
-          <div class="actions">
-            <button class="btn" type="submit">Submit</button>
-          </div>
-        </form>
-      </section>
-
-      <div class="below-card" id="guestBelow">
-        <a id="staffLink" href="#">For Staffs, Log-in here</a>
-      </div>
-
-      <div style="height:28px"></div>
-
-      <section id="staffForm" class="card" aria-labelledby="staffHeading" hidden>
-        <h1 id="staffHeading">Internal Staff Activity Logging</h1>
-
-        <div class="bubble-row" role="tablist" aria-label="Select activity type">
-          <button class="bubble" role="tab" aria-selected="true" aria-pressed="true" data-mode="call">Log a Call</button>
-          <button class="bubble" role="tab" aria-selected="false" aria-pressed="false" data-mode="email">Log an Email</button>
-          <button class="bubble" role="tab" aria-selected="false" aria-pressed="false" data-mode="text">Log a Text</button>
-          <button class="bubble" role="tab" aria-selected="false" aria-pressed="false" data-mode="slack">Log a Slack Message</button>
-        </div>
-
-        <div class="divider" aria-hidden="true"></div>
-
-        <form id="staffDynamic" class="stack" onsubmit="return handleStaffSubmit(event)">
-          <div>
-            <label>Priority</label>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <label><input type="radio" name="s_priority" value="Emergency"> Emergency</label>
-              <label><input type="radio" name="s_priority" value="Urgent"> Urgent</label>
-              <label><input type="radio" name="s_priority" value="Non-Emergency"> Non-Emergency</label>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="s-first">First Name</label>
-              <input id="s-first" type="text" name="first_name" autocomplete="given-name" />
-            </div>
-            <div>
-              <label for="s-last">Last Name</label>
-              <input id="s-last" type="text" name="last_name" autocomplete="family-name" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="s-email">Email</label>
-              <input id="s-email" type="email" name="email" autocomplete="email" />
-            </div>
-            <div>
-              <label for="s-phone">Phone</label>
-              <input id="s-phone" type="tel" name="phone" autocomplete="tel" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="s-preferred">Preferred Contact Method</label>
-              <select id="s-preferred" name="preferred_contact_method">
-                <option value="">Please select</option>
-                <option>Phone</option>
-                <option>Email</option>
-                <option>Text</option>
-                <option>No preference</option>
-              </select>
-            </div>
-            <div>
-              <label for="s-gender">Gender</label>
-              <select id="s-gender" name="gender">
-                <option value="">Please select</option>
-                <option>Female</option>
-                <option>Male</option>
-                <option>Non-binary</option>
-                <option>Prefer not to say</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="s-age">Age</label>
-              <input id="s-age" type="number" name="age" min="0" />
-            </div>
-            <div>
-              <label for="s-county-city">County or City</label>
-              <input id="s-county-city" type="text" name="county_or_city" />
-            </div>
-          </div>
-
-          <div>
-            <label for="s-primary">Primary Issue</label>
-            <select id="s-primary" name="primary_issue">
-              <option value="">Please select</option>
-              <option>Housing Assistance</option>
-              <option>Employment</option>
-              <option>Transportation</option>
-              <option>Personal Care Support</option>
-              <option>Assistive Technology</option>
-              <option>Benefits / Financial Assistance</option>
-              <option>Education / Training</option>
-              <option>Advocacy / Legal Rights</option>
-              <option>Health & Wellness</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <div id="s-primary-other-wrap" style="display:none;">
-            <label for="s-primary-other">Please specify (Other)</label>
-            <input id="s-primary-other" type="text" name="primary_issue_other" />
-          </div>
-
-          <div>
-            <label for="s-summary">Summary of Need</label>
-            <textarea id="s-summary" name="summary_of_need"></textarea>
-          </div>
-
-          <div>
-            <label for="s-notes">Additional Notes</label>
-            <textarea id="s-notes" name="additional_notes"></textarea>
-          </div>
-
-          <div>
-            <label for="s-files">Share any attachments</label>
-            <input id="s-files" type="file" name="attachments" multiple />
-          </div>
-
-          <div class="actions">
-            <button class="btn" type="submit">Submit Log</button>
-          </div>
-        </form>
-      </section>
-
-      <div class="below-card" id="staffBelow" hidden>
-        <a id="logoutLink" href="#">Log out</a>
-      </div>
-
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-inner">
       <div class="footer-row">
+        <!-- Left: Social icons + © -->
         <div class="footer-left">
           <nav class="socials" aria-label="Social media">
             <a class="social-link" href="https://www.facebook.com/MoceansCIL" aria-label="Facebook" target="_blank" rel="noopener">
+              <!-- Facebook SVG (white) -->
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M22 12.06C22 6.49 17.52 2 11.94 2S2 6.49 2 12.06C2 17.08 5.66 21.19 10.44 22v-7.02H7.9v-2.92h2.54V9.41c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.92h-2.34V22C18.34 21.19 22 17.08 22 12.06z"/>
               </svg>
             </a>
             <a class="social-link" href="https://www.instagram.com/moceans_cil/" aria-label="Instagram" target="_blank" rel="noopener">
+              <!-- Instagram SVG (white) -->
               <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A5.5 5.5 5.5 0 1 1 6.5 13 5.51 5.51 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zM18 6.4a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 18 6.4z"/>
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A5.5 5.5 0 1 1 6.5 13 5.51 5.51 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zM18 6.4a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 18 6.4z"/>
               </svg>
             </a>
             <a class="social-link" href="https://www.linkedin.com/company/moceanscil" aria-label="LinkedIn" target="_blank" rel="noopener">
+              <!-- LinkedIn SVG (white) -->
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8.99h5V24H0zM8.99 8.99h4.79v2.05h.07c.67-1.26 2.3-2.6 4.73-2.6 5.06 0 6 3.33 6 7.67V24h-5v-6.67c0-1.59-.03-3.63-2.21-3.63-2.21 0-2.55 1.73-2.55 3.52V24h-5z"/>
               </svg>
@@ -627,6 +830,7 @@
           <div class="copyright">© 2025 MOCEANS</div>
         </div>
 
+        <!-- Right: Address / Phone / EIN -->
         <div class="footer-right">
           <p>213&nbsp;Broadway, Long&nbsp;Branch, NJ&nbsp;07740</p>
           <p>Phone: (732) 571-4884</p>
@@ -636,6 +840,7 @@
 
       <div class="footer-divider" aria-hidden="true"></div>
 
+      <!-- Bottom: Policy links side-by-side -->
       <div class="footer-bottom" aria-label="Policies">
         <a href="https://www.moceanscil.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
         <a href="https://www.moceanscil.org/communications-policy" target="_blank" rel="noopener">Communication Policy</a>
@@ -643,233 +848,127 @@
     </div>
   </footer>
 
+  <!-- ====== PAGE SCRIPTS ====== -->
   <script>
-    const OWNER_FIRSTNAME = '[owner_firstname]';
-    const OWNER_LASTNAME  = '[owner_lastname]';
+    (function(){
+      const $ = (sel, ctx=document) => ctx.querySelector(sel);
+      const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-    const guestForm = document.getElementById('guestForm');
-    const staffForm = document.getElementById('staffForm');
-    const staffLink = document.getElementById('staffLink');
-    const modeFields = document.getElementById('modeFields');
-    const guestBelow = document.getElementById('guestBelow');
-    const staffBelow = document.getElementById('staffBelow');
-    const logoutLink = document.getElementById('logoutLink');
-
-    const assignBar   = document.getElementById('assignBar');
-    const assignTitle = document.getElementById('assignTitle');
-    const chipPriority= document.getElementById('chipPriority');
-    const chipSource  = document.getElementById('chipSource');
-    const chipPrimary = document.getElementById('chipPrimary');
-    const chipCounty  = document.getElementById('chipCounty');
-    const assignDate  = document.getElementById('assignDate');
-    const assignOwner = document.getElementById('assignOwner');
-
-    const assignBack  = document.getElementById('assignBack');
-    const backLink    = document.getElementById('backLink');
-
-    const assignCards = document.getElementById('assignCards');
-    const cardsGrid   = document.getElementById('cardsGrid');
-
-    const staffDynamic = document.getElementById('staffDynamic');
-    const bubbleButtons = () => Array.from(staffForm.querySelectorAll('.bubble'));
-
-    function showState(state){
-      const isStaff = state === 'staff';
-      staffForm.hidden = !isStaff;
-      guestForm.hidden = isStaff;
-      if (guestBelow) guestBelow.hidden = isStaff;
-      if (staffBelow) staffBelow.hidden = !isStaff;
-      if (!isStaff && assignBar) assignBar.hidden = true;
-      if (!isStaff && assignCards) assignCards.hidden = true;
-      if (!isStaff && assignBack) assignBack.hidden = true;
-    }
-
-    if (staffLink) {
-      staffLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        showState('staff');
-      });
-    }
-    if (logoutLink) {
-      logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        showState('guest');
-      });
-    }
-
-    if (backLink){
-      backLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        staffForm.hidden = false;
-        if (assignBar) assignBar.hidden = true;
-        if (assignCards) assignCards.hidden = true;
-        if (assignBack) assignBack.hidden = true;
-        if (staffBelow) staffBelow.hidden = false;
-        staffForm.scrollIntoView({behavior:'smooth', block:'start'});
-      });
-    }
-
-    const templates = { call: ``, email: ``, text: ``, slack: `` };
-    function ensureMode(mode){
-      const valid = ['call','email','text','slack'];
-      const m = valid.includes(mode) ? mode : 'call';
-      bubbleButtons().forEach(btn => {
-        const active = btn.dataset.mode === m;
-        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        btn.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
-      if (modeFields) modeFields.innerHTML = templates[m];
-    }
-    bubbleButtons().forEach(btn => {
-      btn.addEventListener('click', () => ensureMode(btn.dataset.mode));
-    });
-
-    function wirePrimaryIssue(selectId, wrapId){
-      const sel = document.getElementById(selectId);
-      const wrap = document.getElementById(wrapId);
-      if(!sel || !wrap) return;
-      const sync = () => {
-        const v = sel.value.trim().toLowerCase();
-        wrap.style.display = (v === 'other') ? 'block' : 'none';
-      };
-      sel.addEventListener('change', sync);
-      sync();
-    }
-    wirePrimaryIssue('g-primary','g-primary-other-wrap');
-    wirePrimaryIssue('s-primary','s-primary-other-wrap');
-
-    const NAVIGATORS = [
-      { headshot:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop', name:'Katrina Lewis', email:'katrina.lewis@moceanscil.org', phone:'(732) 555-2031', active:5, pending:0, lastAssigned:'Oct 9 2025', specialties:['Housing','Health & Wellness','Advocacy'] },
-      { headshot:'https://d34hmiuaex7c0.cloudfront.net/2952/uploads/profile/staffuser/3395/1662043848061.jpeg?q=80&w=256&auto=format&fit=crop', name:'Pete Romano', email:'pete.romano@moceanscil.org', phone:'(732) 555-2114', active:7, pending:1, lastAssigned:'Oct 10 2025', specialties:['Employment','Education','Financial','Legal Rights'] },
-      { headshot:'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=256&auto=format&fit=crop', name:'Maria Rivera', email:'maria.rivera@moceanscil.org', phone:'(732) 555-2147', active:9, pending:2, lastAssigned:'Oct 7 2025', specialties:['Advocacy','Housing','Legal Rights','Personal Care'] },
-      { headshot:'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=256&auto=format&fit=crop', name:'Deon James', email:'deon.james@moceanscil.org', phone:'(732) 555-2073', active:3, pending:0, lastAssigned:'Oct 8 2025', specialties:['Transportation','Assistive technology','Employment'] },
-      { headshot:'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=256&auto=format&fit=crop', name:'Anika Shah', email:'anika.shah@moceanscil.org', phone:'(732) 555-2195', active:6, pending:1, lastAssigned:'Oct 6 2025', specialties:['Education','Health & Wellness','Advocacy','Financial'] },
-      { headshot:'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop', name:'Owen Price', email:'owen.price@moceanscil.org', phone:'(732) 555-2059', active:8, pending:2, lastAssigned:'Oct 5 2025', specialties:['Housing','Transportation','Personal Care'] }
-    ];
-
-    function makeProgressBar(active, maxActive){
-      const wrap = document.createElement('div');
-      wrap.className = 'progressbar';
-      const fill = document.createElement('div');
-      fill.className = 'progressfill';
-      const pct = Math.max(0, Math.min(100, (active / (maxActive || 1)) * 100));
-      fill.style.width = pct + '%';
-      wrap.appendChild(fill);
-      return wrap;
-    }
-
-    function renderCards(){
-      if(!cardsGrid) return;
-      cardsGrid.innerHTML = '';
-
-      const maxActive = Math.max(...NAVIGATORS.map(n => n.active), 1);
-
-      NAVIGATORS.forEach(nav => {
-        const card = document.createElement('div');
-        card.className = 'nav-card';
-
-        // NEW: fixed-top wrapper keeps all progress bars aligned
-        const topWrap = document.createElement('div');   // NEW
-        topWrap.className = 'fixed-top';                 // NEW
-
-        const idBlock = document.createElement('div');
-        idBlock.className = 'nav-top';
-        idBlock.innerHTML = `
-          <img src="${nav.headshot}" alt="${nav.name} headshot">
-          <div class="nav-id">
-            <div class="name">${nav.name}</div>
-            <div class="email">${nav.email}</div>
-            <div class="phone">${nav.phone}</div>
-          </div>
-        `;
-
-        const specRow = document.createElement('div');
-        specRow.className = 'spec-row';
-        (nav.specialties || []).forEach(s => {
-          const b = document.createElement('span');
-          b.className = 'spec';
-          b.textContent = s;
-          specRow.appendChild(b);
+      // Fill Created Date immediately (local to user's browser)
+      const createdEl = $('#pv-created');
+      const now = new Date();
+      try{
+        createdEl.textContent = now.toLocaleString(undefined, {
+          year:'numeric', month:'short', day:'2-digit',
+          hour:'2-digit', minute:'2-digit'
         });
-
-        topWrap.appendChild(idBlock);   // NEW
-        topWrap.appendChild(specRow);   // NEW
-        card.appendChild(topWrap);      // NEW
-
-        const metaActive = document.createElement('div');
-        metaActive.className = 'meta-row';
-        metaActive.innerHTML = `<span class="k">Active Cases</span><span class="v">${nav.active}</span>`;
-        card.appendChild(metaActive);
-
-        const bar = makeProgressBar(nav.active, maxActive);
-        card.appendChild(bar);
-
-        const pending = document.createElement('div');
-        pending.className = 'meta-row';
-        pending.innerHTML = `<span class="k">Pending Acceptances</span><span class="v">${nav.pending}</span>`;
-        card.appendChild(pending);
-
-        const last = document.createElement('div');
-        last.className = 'meta-row';
-        last.style.marginTop = '8px';
-        last.innerHTML = `<span class="k">Last Assigned</span><span class="v">${nav.lastAssigned}</span>`;
-        card.appendChild(last);
-
-        const btn = document.createElement('button');
-        btn.className = 'btn assign-btn';
-        btn.type = 'button';
-        btn.textContent = `Assign to ${nav.name}`;
-        card.appendChild(btn);
-
-        cardsGrid.appendChild(card);
-      });
-    }
-
-    function handleGuestSubmit(e){
-      e.preventDefault();
-      alert('Submitted Contact / Activity Form (demo).');
-      return false;
-    }
-
-    function handleStaffSubmit(e){
-      e.preventDefault();
-
-      const activeMode = bubbleButtons().find(b => b.getAttribute('aria-pressed') === 'true')?.dataset.mode || 'call';
-      const sourceLabel = { call:'Call', email:'Email', text:'Text', slack:'Slack' }[activeMode] || 'Call';
-
-      const first = document.getElementById('s-first')?.value?.trim() || '';
-      const last  = document.getElementById('s-last')?.value?.trim() || '';
-
-      const fd = new FormData(staffDynamic);
-      const priority = (fd.get('s_priority') || '').toString();
-
-      const primary = document.getElementById('s-primary')?.value || '';
-      const county  = document.getElementById('s-county-city')?.value?.trim() || '';
-
-      if (assignBar) {
-        assignTitle.textContent = `Assign Navigator for: ${first || '—'} ${last || ''}`.trim();
-        chipPriority.textContent = priority || '—';
-        chipSource.textContent   = `Source: ${sourceLabel}`;
-        chipPrimary.textContent  = `Primary Issue: ${primary || '—'}`;
-        chipCounty.textContent   = `City/County: ${county || '—'}`;
-
-        const now = new Date();
-        assignDate.textContent = now.toLocaleString();
-        assignOwner.textContent = `${OWNER_FIRSTNAME} ${OWNER_LASTNAME}`;
-
-        assignBar.hidden = false;
-        if (assignBack) assignBack.hidden = false;
-
-        staffForm.hidden = true;
-        if (staffBelow) staffBelow.hidden = false;
-
-        renderCards();
-        if (assignCards) assignCards.hidden = false;
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }catch(e){
+        createdEl.textContent = now.toString();
       }
-      return false;
-    }
+
+      // Map simple fields -> preview
+      const simpleMap = [
+        {input:'#callerType', preview:'#pv-caller'},
+        {input:'#primary704', preview:'#pv-704'},
+        {input:'#priority',  preview:'#pv-priority'},
+        {input:'#assignee',  preview:'#pv-assignee'}
+      ];
+
+      function updateSimple(){
+        for (const m of simpleMap){
+          const inp = $(m.input);
+          const out = $(m.preview);
+          if (!inp || !out) continue;
+          const val = inp.value && inp.value.trim() !== '' ? inp.value : '—';
+          out.textContent = val;
+        }
+      }
+
+      // Collect checked labels from a data-group
+      function getCheckedLabels(groupSel){
+        const group = $(`[data-group="${groupSel}"]`);
+        if(!group) return [];
+        return $$('.check input[type="checkbox"]:checked', group).map(cb => cb.value.trim());
+      }
+
+      // Specific Conditions — combine all condition groups
+      const conditionGroups = [
+        'cond-physical','cond-cognitive','cond-mental',
+        'cond-hearing','cond-vision','cond-chronic','cond-other'
+      ];
+
+      function updateConditions(){
+        let items = [];
+        for (const g of conditionGroups){
+          items = items.concat(getCheckedLabels(g));
+        }
+        $('#pv-conditions').textContent = items.length ? items.join(', ') : '—';
+      }
+
+      // Services Requested — combine all service groups
+      const serviceGroups = [
+        'svc-il','svc-housing','svc-transport',
+        'svc-health','svc-benefits','svc-edu','svc-rights','svc-safety'
+      ];
+      function updateServices(){
+        let items = [];
+        for (const g of serviceGroups){
+          items = items.concat(getCheckedLabels(g));
+        }
+        $('#pv-services').textContent = items.length ? items.join(', ') : '—';
+      }
+
+      // Wire events
+      const form = $('#intakeForm');
+      form.addEventListener('input', (e)=>{
+        const t = e.target;
+        // Update simple mirrors
+        if (['callerType','primary704','priority','assignee'].includes(t?.id)){
+          updateSimple();
+        }
+
+        // Update groups if a checkbox changed
+        if (t && t.type === 'checkbox'){
+          // Determine if it belongs to condition or service group
+          const groupWrap = t.closest('[data-group]');
+          if(groupWrap){
+            const groupName = groupWrap.getAttribute('data-group') || '';
+            if (groupName.startsWith('cond-')) updateConditions();
+            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServices();
+          }
+        }
+
+        // If selects inside groups are added later, we still keep updates above.
+      });
+
+      // Also update on change for selects (mobile browsers)
+      form.addEventListener('change', (e)=>{
+        const t = e.target;
+        if (['callerType','primary704','priority','assignee'].includes(t?.id)){
+          updateSimple();
+        }
+        if (t && t.type === 'checkbox'){
+          const groupWrap = t.closest('[data-group]');
+          if(groupWrap){
+            const groupName = groupWrap.getAttribute('data-group') || '';
+            if (groupName.startsWith('cond-')) updateConditions();
+            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServices();
+          }
+        }
+      });
+
+      // Initial render to ensure em-dashes show properly
+      updateSimple();
+      updateConditions();
+      updateServices();
+
+      // Prevent default submit for demo
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        // You can wire real submit here.
+        alert('Saved (demo)');
+      });
+    })();
   </script>
 </body>
 </html>
