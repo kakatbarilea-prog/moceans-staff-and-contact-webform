@@ -239,6 +239,13 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap:12px;
   }
+  /* four-column row for City/County/State/Zip */
+  form .row-4{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap:12px;
+  }
+
   .field{
     display:flex;
     flex-direction:column;
@@ -261,6 +268,13 @@
     height:120px;
     padding:12px;
     resize:vertical;
+  }
+
+  /* inline grid for phone type + number */
+  .inline-fields{
+    display:grid;
+    grid-template-columns: minmax(120px, 180px) 1fr;
+    gap:8px;
   }
 
   /* Checkbox grids — 3 per row, wrap on small */
@@ -351,6 +365,27 @@
     color:var(--muted);
   }
 
+  /* View switches */
+  .view-switch{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:8px;
+    font-size:14px;
+  }
+  .view-switch a{
+    color:#0a86ae;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+
+  .hidden{ display:none !important; }
+
+  /* Stack multiple cards inside a single form */
+  form.form-stack{
+    display:grid;
+    gap:16px;
+  }
+
   /* Responsive */
   @media (max-width: 1080px){
     .two-col{ grid-template-columns: 1fr; }
@@ -358,7 +393,9 @@
   @media (max-width: 720px){
     form .row-2 { grid-template-columns: 1fr; }
     form .row-3 { grid-template-columns: 1fr; }
+    form .row-4 { grid-template-columns: 1fr; }
     .checkbox-grid{ grid-template-columns: 1fr 1fr; }
+    .inline-fields{ grid-template-columns: 1fr; }
   }
   @media (max-width: 460px){
     .checkbox-grid{ grid-template-columns: 1fr; }
@@ -374,24 +411,50 @@
     </a>
   </header>
 
-  <!-- Main Content: FORM (left) + PREVIEW (right) -->
+  <!-- Main Content: GUEST (default) + STAFF -->
   <main role="main" aria-label="Intake form and live preview">
     <div class="content-wrap">
-      <div class="two-col">
 
-        <!-- =========================
-             LEFT: FORM
-             ========================= -->
-        <section class="card" aria-labelledby="formTitle">
-          <div class="card-body">
-            <h2 id="formTitle">CIL Intake — Call Log</h2>
-            <form id="intakeForm">
+      <!-- ============ VIEW SWITCH (GUEST) ============ -->
+      <div id="guestSwitch" class="view-switch">
+        <span>For staffs, <a id="linkLogin">log in here</a></span>
+      </div>
+
+      <!-- =========================
+           GUEST VIEW (NON-LOGGED-IN) — SHOWN FIRST
+           ========================= -->
+      <div id="guestView" class="two-col">
+        <!-- LEFT: FORM (Guest) -->
+        <form id="guestForm" class="form-stack" aria-label="Guest intake form">
+          <!-- Card 1: Public intake -->
+          <section class="card" aria-labelledby="guestFormTitle">
+            <div class="card-body">
+              <h2 id="guestFormTitle">CIL Intake — Call Log</h2>
 
               <!-- Caller / Intake -->
               <div class="row-2">
                 <div class="field">
-                  <label for="callerType">Caller Type</label>
-                  <select id="callerType" name="callerType">
+                  <label for="g_intakeSource">Intake Source</label>
+                  <select id="g_intakeSource" name="intakeSource">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Direct Phone Call</option>
+                    <option>Voicemail</option>
+                    <option>Email</option>
+                    <option>Web Form</option>
+                    <option>Walk-in</option>
+                    <option>Slack (AnswerConnect)</option>
+                    <option>Referral — Hospital/Clinic</option>
+                    <option>Referral — Social Services / County</option>
+                    <option>Referral — School/College</option>
+                    <option>Referral — Veteran Services</option>
+                    <option>Referral — Housing Authority/Landlord</option>
+                    <option>Referral — Nonprofit/Advocacy</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="g_callerType">Caller Type</label>
+                  <select id="g_callerType" name="callerType">
                     <option value="" selected disabled>Choose…</option>
                     <option>Individual with a Disability (Consumer)</option>
                     <option>Family Member / Caregiver</option>
@@ -400,6 +463,404 @@
                     <option>Volunteer / Donor / Community Member</option>
                   </select>
                 </div>
+              </div>
+<br>
+              <!-- Basic details -->
+              <div class="row-2">
+                <div class="field">
+                  <label for="g_firstName">First Name</label>
+                  <input id="g_firstName" name="firstName" type="text" />
+                </div>
+                <div class="field">
+                  <label for="g_lastName">Last Name</label>
+                  <input id="g_lastName" name="lastName" type="text" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="g_email">Email</label>
+                  <input id="g_email" name="email" type="email" />
+                </div>
+                <div class="field">
+                  <label for="g_phone">Phone</label>
+                  <div class="inline-fields">
+                    <select id="g_phoneType" name="phoneType" aria-label="Phone type">
+                      <option>Mobile</option>
+                      <option>Landline</option>
+                    </select>
+                    <input id="g_phone" name="phone" type="tel" />
+                  </div>
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="g_age">Age</label>
+                  <input id="g_age" name="age" type="number" min="0" />
+                </div>
+                <div class="field">
+                  <label for="g_gender">Gender</label>
+                  <input id="g_gender" name="gender" type="text" />
+                </div>
+              </div>
+<br>
+              <!-- Address -->
+              <div class="field">
+                <label for="g_address1">Address</label>
+                <div class="row-2">
+                  <input id="g_address1" name="address1" type="text" placeholder="Address 1" />
+                  <input id="g_address2" name="address2" type="text" placeholder="Address 2" />
+                </div>
+                <div class="row-4" style="margin-top:12px;">
+                  <input id="g_city" name="city" type="text" placeholder="City" />
+                  <input id="g_county" name="county" type="text" placeholder="County" />
+                  <input id="g_state" name="state" type="text" placeholder="State" />
+                  <input id="g_zip" name="zip" type="text" placeholder="Zip" />
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="g_contactMethod">Preferred Contact Method</label>
+                  <select id="g_contactMethod" name="contactMethod">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Phone Call</option>
+                    <option>Text Message</option>
+                    <option>Email</option>
+                    <option>Postal Mail</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="g_primaryLang">Primary Language</label>
+                  <select id="g_primaryLang" name="primaryLang">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>American Sign Language (ASL)</option>
+                    <option>Arabic</option>
+                    <option>Chinese</option>
+                    <option>Portuguese</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+<br>
+              <div class="field">
+                <label for="g_primary704">Primary Disability Category (704)</label>
+                <select id="g_primary704" name="primary704">
+                  <option value="" selected disabled>Choose…</option>
+                  <option>Physical</option>
+                  <option>Cognitive / Developmental</option>
+                  <option>Mental / Emotional</option>
+                  <option>Sensory — Hearing</option>
+                  <option>Sensory — Vision</option>
+                  <option>Multiple Disabilities</option>
+                  <option>Other / Unknown</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Card 2: INTERNAL (Guest) -->
+          <section class="card" aria-labelledby="guestInternalTitle">
+            <div class="card-body">
+              <h2 id="guestInternalTitle" class="small-heading">INTERNAL</h2>
+
+              <!-- Specific Conditions (Guest label) -->
+              <div class="small-heading">Specific Condition(s)</div>
+              <p class="subnote">Select all that apply. Use with the 704 category for compliance.</p>
+
+              <!-- Physical -->
+              <div class="section-heading">Physical</div>
+              <div class="checkbox-grid" data-group="g_cond-physical">
+                <label class="check"><input type="checkbox" value="Spinal cord injury"> Spinal cord injury</label>
+                <label class="check"><input type="checkbox" value="Amputation"> Amputation</label>
+                <label class="check"><input type="checkbox" value="Arthritis"> Arthritis</label>
+                <label class="check"><input type="checkbox" value="Cerebral palsy"> Cerebral palsy</label>
+                <label class="check"><input type="checkbox" value="Muscular dystrophy"> Muscular dystrophy</label>
+                <label class="check"><input type="checkbox" value="Multiple sclerosis"> Multiple sclerosis</label>
+                <label class="check"><input type="checkbox" value="Spina bifida"> Spina bifida</label>
+                <label class="check"><input type="checkbox" value="Stroke (residual)"> Stroke (residual)</label>
+                <label class="check"><input type="checkbox" value="Chronic pain"> Chronic pain</label>
+              </div>
+
+              <!-- Cognitive / Developmental -->
+              <div class="section-heading">Cognitive / Developmental</div>
+              <div class="checkbox-grid" data-group="g_cond-cognitive">
+                <label class="check"><input type="checkbox" value="Intellectual disability"> Intellectual disability</label>
+                <label class="check"><input type="checkbox" value="Autism spectrum disorder"> Autism spectrum disorder</label>
+                <label class="check"><input type="checkbox" value="Learning disability"> Learning disability</label>
+                <label class="check"><input type="checkbox" value="ADHD"> ADHD</label>
+                <label class="check"><input type="checkbox" value="Traumatic brain injury (TBI)"> Traumatic brain injury (TBI)</label>
+                <label class="check"><input type="checkbox" value="Other cognitive impairment"> Other cognitive impairment</label>
+              </div>
+
+              <!-- Mental / Emotional -->
+              <div class="section-heading">Mental / Emotional</div>
+              <div class="checkbox-grid" data-group="g_cond-mental">
+                <label class="check"><input type="checkbox" value="Depression"> Depression</label>
+                <label class="check"><input type="checkbox" value="Anxiety"> Anxiety</label>
+                <label class="check"><input type="checkbox" value="Bipolar disorder"> Bipolar disorder</label>
+                <label class="check"><input type="checkbox" value="PTSD"> PTSD</label>
+                <label class="check"><input type="checkbox" value="Schizophrenia / Schizoaffective"> Schizophrenia / Schizoaffective</label>
+                <label class="check"><input type="checkbox" value="Other mental/emotional"> Other mental/emotional</label>
+              </div>
+
+              <!-- Sensory — Hearing -->
+              <div class="section-heading">Sensory — Hearing</div>
+              <div class="checkbox-grid" data-group="g_cond-hearing">
+                <label class="check"><input type="checkbox" value="Deaf"> Deaf</label>
+                <label class="check"><input type="checkbox" value="Hard of hearing"> Hard of hearing</label>
+                <label class="check"><input type="checkbox" value="Speech / communication"> Speech / communication</label>
+              </div>
+
+              <!-- Sensory — Vision -->
+              <div class="section-heading">Sensory — Vision</div>
+              <div class="checkbox-grid" data-group="g_cond-vision">
+                <label class="check"><input type="checkbox" value="Blind"> Blind</label>
+                <label class="check"><input type="checkbox" value="Low vision"> Low vision</label>
+                <label class="check"><input type="checkbox" value="Diabetic retinopathy"> Diabetic retinopathy</label>
+              </div>
+
+              <!-- Chronic / Systemic -->
+              <div class="section-heading">Chronic / Systemic</div>
+              <div class="checkbox-grid" data-group="g_cond-chronic">
+                <label class="check"><input type="checkbox" value="Diabetes"> Diabetes</label>
+                <label class="check"><input type="checkbox" value="Heart disease"> Heart disease</label>
+                <label class="check"><input type="checkbox" value="Respiratory (COPD/asthma)"> Respiratory (COPD/asthma)</label>
+                <label class="check"><input type="checkbox" value="Kidney disease"> Kidney disease</label>
+                <label class="check"><input type="checkbox" value="Cancer"> Cancer</label>
+                <label class="check"><input type="checkbox" value="HIV/AIDS"> HIV/AIDS</label>
+                <label class="check"><input type="checkbox" value="Epilepsy / seizure"> Epilepsy / seizure</label>
+                <label class="check"><input type="checkbox" value="Neurological (Parkinson’s/ALS)"> Neurological (Parkinson’s/ALS)</label>
+                <label class="check"><input type="checkbox" value="Long COVID / post-viral"> Long COVID / post-viral</label>
+              </div>
+
+              <!-- Other -->
+              <div class="section-heading">Other</div>
+              <div class="checkbox-grid" data-group="g_cond-other">
+                <label class="check"><input type="checkbox" value="Age-related disability"> Age-related disability</label>
+                <label class="check"><input type="checkbox" value="Substance use disorder"> Substance use disorder</label>
+                <label class="check"><input type="checkbox" value="Temporary disability"> Temporary disability</label>
+                <label class="check"><input type="checkbox" value="Other / not listed"> Other / not listed</label>
+              </div>
+<br>
+              <!-- Service Requested (Guest label) -->
+              <div class="small-heading" style="margin-top:18px;">Service Requested</div>
+
+              <div class="section-heading">Independent Living Core Services</div>
+              <div class="checkbox-grid" data-group="g_svc-il">
+                <label class="check"><input type="checkbox" value="Information & Referral"> Information & Referral</label>
+                <label class="check"><input type="checkbox" value="Independent Living Skills Training"> Independent Living Skills Training</label>
+                <label class="check"><input type="checkbox" value="Peer Support / Counseling"> Peer Support / Counseling</label>
+                <label class="check"><input type="checkbox" value="Individual Advocacy"> Individual Advocacy</label>
+                <label class="check"><input type="checkbox" value="Transition (Youth)"> Transition (Youth)</label>
+                <label class="check"><input type="checkbox" value="Transition (Nursing Home Diversion)"> Transition (Nursing Home Diversion)</label>
+                <label class="check"><input type="checkbox" value="Transition (Institution → Community)"> Transition (Institution → Community)</label>
+              </div>
+
+              <div class="section-heading">Housing & Environment</div>
+              <div class="checkbox-grid" data-group="g_svc-housing">
+                <label class="check"><input type="checkbox" value="Housing search"> Housing search</label>
+                <label class="check"><input type="checkbox" value="Home modification"> Home modification</label>
+                <label class="check"><input type="checkbox" value="Utility assistance"> Utility assistance</label>
+              </div>
+
+              <div class="section-heading">Mobility & Transportation</div>
+              <div class="checkbox-grid" data-group="g_svc-transport">
+                <label class="check"><input type="checkbox" value="Paratransit enrollment"> Paratransit enrollment</label>
+                <label class="check"><input type="checkbox" value="Transportation coordination"> Transportation coordination</label>
+              </div>
+
+              <div class="section-heading">Personal Assistance & Health</div>
+              <div class="checkbox-grid" data-group="g_svc-health">
+                <label class="check"><input type="checkbox" value="Personal care aide"> Personal care aide</label>
+                <label class="check"><input type="checkbox" value="Attendant management support"> Attendant management support</label>
+                <label class="check"><input type="checkbox" value="Durable medical equipment"> Durable medical equipment</label>
+                <label class="check"><input type="checkbox" value="Assistive technology"> Assistive technology</label>
+              </div>
+
+              <div class="section-heading">Benefits & Income</div>
+              <div class="checkbox-grid" data-group="g_svc-benefits">
+                <label class="check"><input type="checkbox" value="SSI / SSDI"> SSI / SSDI</label>
+                <label class="check"><input type="checkbox" value="Medicaid / Medicare"> Medicaid / Medicare</label>
+                <label class="check"><input type="checkbox" value="SNAP / TANF / WIC"> SNAP / TANF / WIC</label>
+              </div>
+
+              <div class="section-heading">Education & Employment</div>
+              <div class="checkbox-grid" data-group="g_svc-edu">
+                <label class="check"><input type="checkbox" value="Vocational Rehabilitation (VR) referral"> Vocational Rehabilitation (VR) referral</label>
+                <label class="check"><input type="checkbox" value="Job readiness / placement"> Job readiness / placement</label>
+                <label class="check"><input type="checkbox" value="Post-secondary accommodations"> Post-secondary accommodations</label>
+              </div>
+
+              <div class="section-heading">Rights & Accessibility</div>
+              <div class="checkbox-grid" data-group="g_svc-rights">
+                <label class="check"><input type="checkbox" value="ADA / accessibility"> ADA / accessibility</label>
+                <label class="check"><input type="checkbox" value="Legal aid / protection"> Legal aid / protection</label>
+                <label class="check"><input type="checkbox" value="Voter access"> Voter access</label>
+              </div>
+
+              <div class="section-heading">Safety / Urgent</div>
+              <div class="checkbox-grid" data-group="g_svc-safety">
+                <label class="check"><input type="checkbox" value="Homelessness prevention"> Homelessness prevention</label>
+                <label class="check"><input type="checkbox" value="Food insecurity"> Food insecurity</label>
+                <label class="check"><input type="checkbox" value="Abuse / neglect concern"> Abuse / neglect concern</label>
+              </div>
+<br>
+              <!-- Additional Notes (Guest label) -->
+              <div class="field">
+                <label for="g_notes">Additional Notes</label>
+                <textarea id="g_notes" name="notes" placeholder=""></textarea>
+              </div>
+<br>
+              <!-- High Risk Case (Guest) -->
+              <div class="field">
+                <label class="small-heading" style="margin:12px 0 8px;">High Risk Case</label>
+                <div class="boxed">
+                  <div class="checkbox-grid" data-group="g_risk-high">
+                    <label class="check"><input type="checkbox" value="Immediate safety concern"> Immediate safety concern</label>
+                    <label class="check"><input type="checkbox" value="Homelessness risk"> Homelessness risk</label>
+                    <label class="check"><input type="checkbox" value="No food access"> No food access</label>
+                    <label class="check"><input type="checkbox" value="No utilities"> No utilities</label>
+                    <label class="check"><input type="checkbox" value="Domestic violence"> Domestic violence</label>
+                    <label class="check"><input type="checkbox" value="Elder/child abuse"> Elder/child abuse</label>
+                    <label class="check"><input type="checkbox" value="Medical crisis"> Medical crisis</label>
+                    <label class="check"><input type="checkbox" value="Suicidal ideation"> Suicidal ideation</label>
+                  </div>
+                </div>
+              </div>
+<br>
+              <!-- More questions -->
+              <div class="row-3">
+                <div class="field">
+                  <label for="g_priority">Priority</label>
+                  <select id="g_priority" name="priority">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Low</option>
+                    <option>Normal</option>
+                    <option>High</option>
+                    <option>Urgent (24–48h)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="g_immediateRisk">Immediate Risk</label>
+                  <select id="g_immediateRisk" name="immediateRisk">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>None reported</option>
+                    <option>Homelessness risk</option>
+                    <option>Food insecurity</option>
+                    <option>Abuse/neglect suspected</option>
+                    <option>Other safety concern</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="g_consent">Consent to Contact & Share Referrals</label>
+                  <select id="g_consent" name="consent">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Yes — contact & share with partners as needed</option>
+                    <option>Yes — contact only (no sharing)</option>
+                    <option>No — contact consumer only</option>
+                  </select>
+                </div>
+              </div>
+<br>
+              <div class="row-2">
+                <div class="field">
+                  <label for="g_followType">Follow-up Type</label>
+                  <select id="g_followType" name="followType">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>One-time check-in</option>
+                    <option>Weekly until resolved</option>
+                    <option>Monthly status update</option>
+                    <option>No follow-up requested</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="g_followDate">Follow-up Target</label>
+                  <input id="g_followDate" name="followDate" type="date" />
+                </div>
+              </div>
+<br>
+              <!-- Quick Flags / Tags -->
+              <div class="field">
+                <label class="small-heading" style="margin:12px 0 8px;">Quick Flags / Tags</label>
+                <div class="boxed">
+                  <div class="checkbox-grid" data-group="g_quick-flags">
+                    <label class="check"><input type="checkbox" value="New consumer"> New consumer</label>
+                    <label class="check"><input type="checkbox" value="Returning consumer"> Returning consumer</label>
+                    <label class="check"><input type="checkbox" value="Spanish speaker"> Spanish speaker</label>
+                    <label class="check"><input type="checkbox" value="Veteran"> Veteran</label>
+                    <label class="check"><input type="checkbox" value="Homelessness risk"> Homelessness risk</label>
+                    <label class="check"><input type="checkbox" value="Youth (14–24)"> Youth (14–24)</label>
+                    <label class="check"><input type="checkbox" value="Aging (60+)"> Aging (60+)</label>
+                    <label class="check"><input type="checkbox" value="ASL needed"> ASL needed</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions (Guest: single Submit) -->
+              <div class="actions">
+                <button type="submit" class="btn btn-brand">Submit</button>
+              </div>
+            </div>
+          </section>
+        </form>
+
+        <!-- RIGHT: PREVIEW (Guest) -->
+        <aside class="card preview" aria-labelledby="guestPreviewTitle">
+          <div class="card-body">
+            <h2 id="guestPreviewTitle">Live Preview</h2>
+
+            <div>
+              <div class="label">Created Date</div>
+              <div class="value" id="pv-created-guest">—</div>
+
+              <div class="label">Caller Type</div>
+              <div class="value" id="pv-caller-guest">—</div>
+
+              <div class="label">Primary Disability Category (704)</div>
+              <div class="value" id="pv-704-guest">—</div>
+
+              <div class="label">Specific Condition(s)</div>
+              <div class="value" id="pv-conditions-guest">—</div>
+
+              <div class="label">Service Requested</div>
+              <div class="value" id="pv-services-guest">—</div>
+
+              <div class="label">Priority</div>
+              <div class="value" id="pv-priority-guest">—</div>
+
+              <!-- Assigned To intentionally NOT shown in guest -->
+            </div>
+
+            <div class="divider" aria-hidden="true"></div>
+
+            <!-- Navigator Workload intentionally NOT shown in guest -->
+          </div>
+        </aside>
+      </div>
+
+      <!-- ============ VIEW SWITCH (STAFF) — hidden until login ============ -->
+      <div id="staffSwitch" class="view-switch hidden">
+        <span><a id="linkLogout">Log out</a></span>
+      </div>
+
+      <!-- =========================
+           STAFF VIEW (LOGGED-IN)
+           ========================= -->
+      <div id="staffView" class="two-col hidden">
+
+        <!-- LEFT: FORM (Staff) -->
+        <form id="intakeForm" class="form-stack" aria-label="Staff intake form">
+          <!-- Card 1: Public intake -->
+          <section class="card" aria-labelledby="formTitle">
+            <div class="card-body">
+              <h2 id="formTitle">CIL Intake — Call Log</h2>
+
+              <!-- Caller / Intake -->
+              <div class="row-2">
                 <div class="field">
                   <label for="intakeSource">Intake Source</label>
                   <select id="intakeSource" name="intakeSource">
@@ -417,6 +878,17 @@
                     <option>Referral — Housing Authority/Landlord</option>
                     <option>Referral — Nonprofit/Advocacy</option>
                     <option>Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="callerType">Caller Type</label>
+                  <select id="callerType" name="callerType">
+                    <option value="" selected disabled>Choose…</option>
+                    <option>Individual with a Disability (Consumer)</option>
+                    <option>Family Member / Caregiver</option>
+                    <option>Referring Agency / Partner</option>
+                    <option>Information / Referral (General Public)</option>
+                    <option>Volunteer / Donor / Community Member</option>
                   </select>
                 </div>
               </div>
@@ -440,7 +912,13 @@
                 </div>
                 <div class="field">
                   <label for="phone">Phone</label>
-                  <input id="phone" name="phone" type="tel" />
+                  <div class="inline-fields">
+                    <select id="phoneType" name="phoneType" aria-label="Phone type">
+                      <option>Mobile</option>
+                      <option>Landline</option>
+                    </select>
+                    <input id="phone" name="phone" type="tel" />
+                  </div>
                 </div>
               </div>
 <br>
@@ -455,14 +933,18 @@
                 </div>
               </div>
 <br>
-              <div class="row-2">
-                <div class="field">
-                  <label for="county">County</label>
-                  <input id="county" name="county" type="text" />
+              <!-- Address (replaces County / City row) -->
+              <div class="field">
+                <label for="address1">Address</label>
+                <div class="row-2">
+                  <input id="address1" name="address1" type="text" placeholder="Address 1" />
+                  <input id="address2" name="address2" type="text" placeholder="Address 2" />
                 </div>
-                <div class="field">
-                  <label for="city">City/Municipality</label>
-                  <input id="city" name="city" type="text" />
+                <div class="row-4" style="margin-top:12px;">
+                  <input id="city" name="city" type="text" placeholder="City" />
+                  <input id="county" name="county" type="text" placeholder="County" />
+                  <input id="state" name="state" type="text" placeholder="State" />
+                  <input id="zip" name="zip" type="text" placeholder="Zip" />
                 </div>
               </div>
 <br>
@@ -505,9 +987,16 @@
                   <option>Other / Unknown</option>
                 </select>
               </div>
-<br>
+            </div>
+          </section>
+
+          <!-- Card 2: INTERNAL (Staff) -->
+          <section class="card" aria-labelledby="staffInternalTitle">
+            <div class="card-body">
+              <h2 id="staffInternalTitle" class="small-heading">INTERNAL</h2>
+
               <!-- Specific Conditions -->
-              <div class="small-heading">Specific Condition(s) (Internal)</div>
+              <div class="small-heading">Specific Condition(s)</div>
               <p class="subnote">Select all that apply. Use with the 704 category for compliance.</p>
 
               <!-- Physical -->
@@ -654,6 +1143,23 @@
                 <textarea id="notes" name="notes" placeholder=""></textarea>
               </div>
 <br>
+              <!-- High Risk Case (Staff) -->
+              <div class="field">
+                <label class="small-heading" style="margin:12px 0 8px;">High Risk Case</label>
+                <div class="boxed">
+                  <div class="checkbox-grid" data-group="risk-high">
+                    <label class="check"><input type="checkbox" value="Immediate safety concern"> Immediate safety concern</label>
+                    <label class="check"><input type="checkbox" value="Homelessness risk"> Homelessness risk</label>
+                    <label class="check"><input type="checkbox" value="No food access"> No food access</label>
+                    <label class="check"><input type="checkbox" value="No utilities"> No utilities</label>
+                    <label class="check"><input type="checkbox" value="Domestic violence"> Domestic violence</label>
+                    <label class="check"><input type="checkbox" value="Elder/child abuse"> Elder/child abuse</label>
+                    <label class="check"><input type="checkbox" value="Medical crisis"> Medical crisis</label>
+                    <label class="check"><input type="checkbox" value="Suicidal ideation"> Suicidal ideation</label>
+                  </div>
+                </div>
+              </div>
+<br>
               <!-- More questions -->
               <div class="row-3">
                 <div class="field">
@@ -745,14 +1251,11 @@
                 <button type="button" class="btn btn-outline">Save Draft</button>
                 <button type="submit" class="btn btn-brand">Save & Assign</button>
               </div>
+            </div>
+          </section>
+        </form>
 
-            </form>
-          </div>
-        </section>
-
-        <!-- =========================
-             RIGHT: PREVIEW
-             ========================= -->
+        <!-- RIGHT: PREVIEW (Staff) -->
         <aside class="card preview" aria-labelledby="previewTitle">
           <div class="card-body">
             <h2 id="previewTitle">Live Preview</h2>
@@ -767,7 +1270,7 @@
               <div class="label">Primary Disability Category (704)</div>
               <div class="value" id="pv-704">—</div>
 
-              <div class="label">Specific Condition(s) (Internal)</div>
+              <div class="label">Specific Condition(s)</div>
               <div class="value" id="pv-conditions">—</div>
 
               <div class="label">Call Reason / Services Requested</div>
@@ -854,28 +1357,50 @@
       const $ = (sel, ctx=document) => ctx.querySelector(sel);
       const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-      // Fill Created Date immediately (local to user's browser)
-      const createdEl = $('#pv-created');
+      // ---- View toggle
+      const guestView = $('#guestView');
+      const staffView = $('#staffView');
+      const guestSwitch = $('#guestSwitch');
+      const staffSwitch = $('#staffSwitch');
+      const linkLogin = $('#linkLogin');
+      const linkLogout = $('#linkLogout');
+
+      linkLogin.addEventListener('click', (e)=>{
+        e.preventDefault();
+        guestView.classList.add('hidden');
+        guestSwitch.classList.add('hidden');
+        staffView.classList.remove('hidden');
+        staffSwitch.classList.remove('hidden');
+      });
+      linkLogout.addEventListener('click', (e)=>{
+        e.preventDefault();
+        staffView.classList.add('hidden');
+        staffSwitch.classList.add('hidden');
+        guestView.classList.remove('hidden');
+        guestSwitch.classList.remove('hidden');
+      });
+
+      // ====== STAFF behavior ======
+      const createdElStaff = $('#pv-created');
       const now = new Date();
       try{
-        createdEl.textContent = now.toLocaleString(undefined, {
+        createdElStaff.textContent = now.toLocaleString(undefined, {
           year:'numeric', month:'short', day:'2-digit',
           hour:'2-digit', minute:'2-digit'
         });
       }catch(e){
-        createdEl.textContent = now.toString();
+        createdElStaff.textContent = now.toString();
       }
 
-      // Map simple fields -> preview
-      const simpleMap = [
+      const simpleMapStaff = [
         {input:'#callerType', preview:'#pv-caller'},
         {input:'#primary704', preview:'#pv-704'},
         {input:'#priority',  preview:'#pv-priority'},
         {input:'#assignee',  preview:'#pv-assignee'}
       ];
 
-      function updateSimple(){
-        for (const m of simpleMap){
+      function updateSimpleStaff(){
+        for (const m of simpleMapStaff){
           const inp = $(m.input);
           const out = $(m.preview);
           if (!inp || !out) continue;
@@ -884,89 +1409,172 @@
         }
       }
 
-      // Collect checked labels from a data-group
       function getCheckedLabels(groupSel){
-        const group = $(`[data-group="${groupSel}"]`);
+        const group = document.querySelector(`[data-group="${groupSel}"]`);
         if(!group) return [];
         return $$('.check input[type="checkbox"]:checked', group).map(cb => cb.value.trim());
       }
 
-      // Specific Conditions — combine all condition groups
-      const conditionGroups = [
+      const conditionGroupsStaff = [
         'cond-physical','cond-cognitive','cond-mental',
         'cond-hearing','cond-vision','cond-chronic','cond-other'
       ];
 
-      function updateConditions(){
+      function updateConditionsStaff(){
         let items = [];
-        for (const g of conditionGroups){
+        for (const g of conditionGroupsStaff){
           items = items.concat(getCheckedLabels(g));
         }
         $('#pv-conditions').textContent = items.length ? items.join(', ') : '—';
       }
 
-      // Services Requested — combine all service groups
-      const serviceGroups = [
+      const serviceGroupsStaff = [
         'svc-il','svc-housing','svc-transport',
         'svc-health','svc-benefits','svc-edu','svc-rights','svc-safety'
       ];
-      function updateServices(){
+      function updateServicesStaff(){
         let items = [];
-        for (const g of serviceGroups){
+        for (const g of serviceGroupsStaff){
           items = items.concat(getCheckedLabels(g));
         }
         $('#pv-services').textContent = items.length ? items.join(', ') : '—';
       }
 
-      // Wire events
-      const form = $('#intakeForm');
-      form.addEventListener('input', (e)=>{
-        const t = e.target;
-        // Update simple mirrors
-        if (['callerType','primary704','priority','assignee'].includes(t?.id)){
-          updateSimple();
-        }
-
-        // Update groups if a checkbox changed
-        if (t && t.type === 'checkbox'){
-          // Determine if it belongs to condition or service group
-          const groupWrap = t.closest('[data-group]');
-          if(groupWrap){
-            const groupName = groupWrap.getAttribute('data-group') || '';
-            if (groupName.startsWith('cond-')) updateConditions();
-            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServices();
-          }
-        }
-
-        // If selects inside groups are added later, we still keep updates above.
-      });
-
-      // Also update on change for selects (mobile browsers)
-      form.addEventListener('change', (e)=>{
+      const staffForm = $('#intakeForm');
+      staffForm.addEventListener('input', (e)=>{
         const t = e.target;
         if (['callerType','primary704','priority','assignee'].includes(t?.id)){
-          updateSimple();
+          updateSimpleStaff();
         }
         if (t && t.type === 'checkbox'){
           const groupWrap = t.closest('[data-group]');
           if(groupWrap){
             const groupName = groupWrap.getAttribute('data-group') || '';
-            if (groupName.startsWith('cond-')) updateConditions();
-            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServices();
+            if (groupName.startsWith('cond-')) updateConditionsStaff();
+            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServicesStaff();
+          }
+        }
+      });
+      staffForm.addEventListener('change', (e)=>{
+        const t = e.target;
+        if (['callerType','primary704','priority','assignee'].includes(t?.id)){
+          updateSimpleStaff();
+        }
+        if (t && t.type === 'checkbox'){
+          const groupWrap = t.closest('[data-group]');
+          if(groupWrap){
+            const groupName = groupWrap.getAttribute('data-group') || '';
+            if (groupName.startsWith('cond-')) updateConditionsStaff();
+            if (groupName.startsWith('svc-') || groupName === 'quick-flags') updateServicesStaff();
           }
         }
       });
 
-      // Initial render to ensure em-dashes show properly
-      updateSimple();
-      updateConditions();
-      updateServices();
+      updateSimpleStaff();
+      updateConditionsStaff();
+      updateServicesStaff();
 
-      // Prevent default submit for demo
-      form.addEventListener('submit', (e)=>{
+      staffForm.addEventListener('submit', (e)=>{
         e.preventDefault();
-        // You can wire real submit here.
         alert('Saved (demo)');
+      });
+
+      // ====== GUEST behavior ======
+      const createdElGuest = $('#pv-created-guest');
+      try{
+        createdElGuest.textContent = now.toLocaleString(undefined, {
+          year:'numeric', month:'short', day:'2-digit',
+          hour:'2-digit', minute:'2-digit'
+        });
+      }catch(e){
+        createdElGuest.textContent = now.toString();
+      }
+
+      const simpleMapGuest = [
+        {input:'#g_callerType', preview:'#pv-caller-guest'},
+        {input:'#g_primary704', preview:'#pv-704-guest'},
+        {input:'#g_priority',  preview:'#pv-priority-guest'}
+        // no assignee in guest
+      ];
+
+      function updateSimpleGuest(){
+        for (const m of simpleMapGuest){
+          const inp = $(m.input);
+          const out = $(m.preview);
+          if (!inp || !out) continue;
+          const val = inp.value && inp.value.trim() !== '' ? inp.value : '—';
+          out.textContent = val;
+        }
+      }
+
+      function getCheckedLabelsGuest(groupSel){
+        const group = document.querySelector(`[data-group="${groupSel}"]`);
+        if(!group) return [];
+        return $$('.check input[type="checkbox"]:checked', group).map(cb => cb.value.trim());
+      }
+
+      const conditionGroupsGuest = [
+        'g_cond-physical','g_cond-cognitive','g_cond-mental',
+        'g_cond-hearing','g_cond-vision','g_cond-chronic','g_cond-other'
+      ];
+
+      function updateConditionsGuest(){
+        let items = [];
+        for (const g of conditionGroupsGuest){
+          items = items.concat(getCheckedLabelsGuest(g));
+        }
+        $('#pv-conditions-guest').textContent = items.length ? items.join(', ') : '—';
+      }
+
+      const serviceGroupsGuest = [
+        'g_svc-il','g_svc-housing','g_svc-transport',
+        'g_svc-health','g_svc-benefits','g_svc-edu','g_svc-rights','g_svc-safety'
+      ];
+      function updateServicesGuest(){
+        let items = [];
+        for (const g of serviceGroupsGuest){
+          items = items.concat(getCheckedLabelsGuest(g));
+        }
+        $('#pv-services-guest').textContent = items.length ? items.join(', ') : '—';
+      }
+
+      const guestForm = $('#guestForm');
+      guestForm.addEventListener('input', (e)=>{
+        const t = e.target;
+        if (['g_callerType','g_primary704','g_priority'].includes(t?.id)){
+          updateSimpleGuest();
+        }
+        if (t && t.type === 'checkbox'){
+          const groupWrap = t.closest('[data-group]');
+          if(groupWrap){
+            const groupName = groupWrap.getAttribute('data-group') || '';
+            if (groupName.startsWith('g_cond-')) updateConditionsGuest();
+            if (groupName.startsWith('g_svc-') || groupName === 'g_quick-flags') updateServicesGuest();
+          }
+        }
+      });
+      guestForm.addEventListener('change', (e)=>{
+        const t = e.target;
+        if (['g_callerType','g_primary704','g_priority'].includes(t?.id)){
+          updateSimpleGuest();
+        }
+        if (t && t.type === 'checkbox'){
+          const groupWrap = t.closest('[data-group]');
+          if(groupWrap){
+            const groupName = groupWrap.getAttribute('data-group') || '';
+            if (groupName.startsWith('g_cond-')) updateConditionsGuest();
+            if (groupName.startsWith('g_svc-') || groupName === 'g_quick-flags') updateServicesGuest();
+          }
+        }
+      });
+
+      updateSimpleGuest();
+      updateConditionsGuest();
+      updateServicesGuest();
+
+      guestForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        alert('Submitted (demo)');
       });
     })();
   </script>
