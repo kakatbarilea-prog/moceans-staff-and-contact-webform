@@ -432,50 +432,62 @@
               <h2 id="guestFormTitle">CIL Intake — Call Log</h2>
 
               <!-- Caller / Intake -->
-              <div class="row-2">
-                <div class="field">
-                  <label for="g_intakeSource">Intake Source</label>
-                  <select id="g_intakeSource" name="intakeSource">
-                    <option value="" selected disabled>Choose…</option>
-                    <option>Direct Phone Call</option>
-                    <option>Voicemail</option>
-                    <option>Email</option>
-                    <option>Web Form</option>
-                    <option>Walk-in</option>
-                    <option>Slack (AnswerConnect)</option>
-                    <option>Referral — Hospital/Clinic</option>
-                    <option>Referral — Social Services / County</option>
-                    <option>Referral — School/College</option>
-                    <option>Referral — Veteran Services</option>
-                    <option>Referral — Housing Authority/Landlord</option>
-                    <option>Referral — Nonprofit/Advocacy</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="g_callerType">Caller Type</label>
-                  <select id="g_callerType" name="callerType">
-                    <option value="" selected disabled>Choose…</option>
-                    <option>Individual with a Disability (Consumer)</option>
-                    <option>Family Member / Caregiver</option>
-                    <option>Referring Agency / Partner</option>
-                    <option>Information / Referral (General Public)</option>
-                    <option>Volunteer / Donor / Community Member</option>
-                  </select>
-                </div>
-              </div>
+<div class="row-2">
+  <div class="field">
+    <label for="g_intakeSource">Intake Source</label>
+    <select id="g_intakeSource" name="intakeSource">
+      <option value="" selected disabled>Choose…</option>
+      <option value="direct_phone_call">Direct Phone Call</option>
+      <option value="voicemail">Voicemail</option>
+      <option value="email">Email</option>
+      <option value="web_form">Web Form</option>
+      <option value="walk_in">Walk-in</option>
+      <option value="slack_answerconnect">Slack (AnswerConnect)</option>
+      <option value="referral">Referral</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+
+  <!-- Conditional sub-menu appears dynamically -->
+  <div class="field hidden" id="g_intakeSubWrap">
+    <label for="g_intakeSub">Additional Details</label>
+    <select id="g_intakeSub" name="intakeSub">
+      <option value="" selected disabled>Choose…</option>
+    </select>
+  </div>
+</div>
+
 <br>
               <!-- Basic details -->
-              <div class="row-2">
-                <div class="field">
-                  <label for="g_firstName">First Name</label>
-                  <input id="g_firstName" name="firstName" type="text" />
-                </div>
-                <div class="field">
-                  <label for="g_lastName">Last Name</label>
-                  <input id="g_lastName" name="lastName" type="text" />
-                </div>
-              </div>
+<div class="row-3">
+  <div class="field">
+    <label for="g_callerType">Contact Type</label>
+    <select id="g_callerType" name="callerType">
+      <option value="" selected disabled>Choose…</option>
+<option>Prospect</option>
+<option>Lead</option>
+<option>Customer</option>
+<option>Client</option>
+<option>Member</option>
+<option>Partner</option>
+<option>Referral</option>
+<option>Donor</option>
+<option>Volunteer</option>
+<option>Family Member</option>
+
+    </select>
+  </div>
+  <div class="field">
+    <label for="g_firstName">First Name</label>
+    <input id="g_firstName" name="firstName" type="text" />
+  </div>
+  <div class="field">
+    <label for="g_lastName">Last Name</label>
+    <input id="g_lastName" name="lastName" type="text" />
+  </div>
+</div>
+
+
 <br>
               <div class="row-2">
                 <div class="field">
@@ -794,7 +806,7 @@
               <div class="label">Created Date</div>
               <div class="value" id="pv-created-guest">—</div>
 
-              <div class="label">Caller Type</div>
+              <div class="label">Contact Type</div>
               <div class="value" id="pv-caller-guest">—</div>
 
               <div class="label">Primary Disability Category (704)</div>
@@ -837,50 +849,62 @@
               <h2 id="formTitle">CIL Intake — Call Log</h2>
 
               <!-- Caller / Intake -->
-              <div class="row-2">
-                <div class="field">
-                  <label for="intakeSource">Intake Source</label>
-                  <select id="intakeSource" name="intakeSource">
-                    <option value="" selected disabled>Choose…</option>
-                    <option>Direct Phone Call</option>
-                    <option>Voicemail</option>
-                    <option>Email</option>
-                    <option>Web Form</option>
-                    <option>Walk-in</option>
-                    <option>Slack (AnswerConnect)</option>
-                    <option>Referral — Hospital/Clinic</option>
-                    <option>Referral — Social Services / County</option>
-                    <option>Referral — School/College</option>
-                    <option>Referral — Veteran Services</option>
-                    <option>Referral — Housing Authority/Landlord</option>
-                    <option>Referral — Nonprofit/Advocacy</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="callerType">Caller Type</label>
-                  <select id="callerType" name="callerType">
-                    <option value="" selected disabled>Choose…</option>
-                    <option>Individual with a Disability (Consumer)</option>
-                    <option>Family Member / Caregiver</option>
-                    <option>Referring Agency / Partner</option>
-                    <option>Information / Referral (General Public)</option>
-                    <option>Volunteer / Donor / Community Member</option>
-                  </select>
-                </div>
-              </div>
+<div class="row-2">
+  <div class="field">
+    <label for="intakeSource">Intake Source</label>
+    <select id="intakeSource" name="intakeSource">
+      <option value="" selected disabled>Choose…</option>
+      <option value="direct_phone_call">Direct Phone Call</option>
+      <option value="voicemail">Voicemail</option>
+      <option value="email">Email</option>
+      <option value="web_form">Web Form</option>
+      <option value="walk_in">Walk-in</option>
+      <option value="slack_answerconnect">Slack (AnswerConnect)</option>
+      <option value="referral">Referral</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+
+  <!-- Conditional sub-menu appears dynamically -->
+  <div class="field hidden" id="intakeSubWrap">
+    <label for="intakeSub">Additional Details</label>
+    <select id="intakeSub" name="intakeSub">
+      <option value="" selected disabled>Choose…</option>
+    </select>
+  </div>
+</div>
+
 <br>
               <!-- Basic details -->
-              <div class="row-2">
-                <div class="field">
-                  <label for="firstName">First Name</label>
-                  <input id="firstName" name="firstName" type="text" />
-                </div>
-                <div class="field">
-                  <label for="lastName">Last Name</label>
-                  <input id="lastName" name="lastName" type="text" />
-                </div>
-              </div>
+<div class="row-3">
+  <div class="field">
+    <label for="callerType">Contact Type</label>
+    <select id="callerType" name="callerType">
+      <option value="" selected disabled>Choose…</option>
+<option>Prospect</option>
+<option>Lead</option>
+<option>Customer</option>
+<option>Client</option>
+<option>Member</option>
+<option>Partner</option>
+<option>Referral</option>
+<option>Donor</option>
+<option>Volunteer</option>
+<option>Family Member</option>
+
+    </select>
+  </div>
+  <div class="field">
+    <label for="firstName">First Name</label>
+    <input id="firstName" name="firstName" type="text" />
+  </div>
+  <div class="field">
+    <label for="lastName">Last Name</label>
+    <input id="lastName" name="lastName" type="text" />
+  </div>
+</div>
+
+
 <br>
               <div class="row-2">
                 <div class="field">
@@ -1220,7 +1244,7 @@
               <div class="label">Created Date</div>
               <div class="value" id="pv-created">—</div>
 
-              <div class="label">Caller Type</div>
+              <div class="label">Contact Type</div>
               <div class="value" id="pv-caller">—</div>
 
               <div class="label">Primary Disability Category (704)</div>
@@ -1532,7 +1556,104 @@
         e.preventDefault();
         alert('Submitted (demo)');
       });
-    })();
+
+      // ====== Conditional sub-menu logic for Intake Source ======
+const subMenus = {
+  direct_phone_call: {
+    label: "Call Direction",
+    options: ["Inbound (client called us)", "Outbound (we called client)"]
+  },
+  voicemail: {
+    label: "Voicemail Source",
+    options: ["Main line", "Staff direct line", "Forwarded / AnswerConnect"]
+  },
+  email: {
+    label: "Email Direction",
+    options: ["Inbound (client emailed us)", "Outbound (we emailed client)", "Automated (system-generated)"]
+  },
+  web_form: {
+    label: "Form Type",
+    options: ["General inquiry", "Referral form", "Volunteer / donor form", "Other"]
+  },
+  walk_in: {
+    label: "Walk-in Location",
+    options: ["Long Branch office", "Toms River office", "Outreach / community event"]
+  },
+  slack_answerconnect: {
+    label: "Slack Message Type",
+    options: ["Inbound from client", "Transfer from AnswerConnect", "Internal message"]
+  },
+  referral: {
+    label: "Referral Type",
+    options: ["Hospital / Clinic", "Social Services / County", "School / College", "Veteran Services", "Housing Authority / Landlord", "Nonprofit / Advocacy"]
+  },
+  other: {
+    label: "Other Source",
+    options: ["(freeform text entry not yet implemented)"]
+  }
+};
+
+function handleIntakeSourceChange(srcSelect, subWrap, subSelect) {
+  const val = srcSelect.value;
+  const config = subMenus[val];
+  const labelEl = subWrap.querySelector('label');
+
+  // Remove any previous input field
+  const existingText = subWrap.querySelector('input[type="text"]');
+  if (existingText) existingText.remove();
+
+  if (val === 'other') {
+    // Show a freeform text box instead
+    labelEl.textContent = 'Please specify:';
+    subSelect.classList.add('hidden');
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.name = srcSelect.id === 'intakeSource' ? 'intakeOther' : 'g_intakeOther';
+    textInput.id = srcSelect.id === 'intakeSource' ? 'intakeOther' : 'g_intakeOther';
+    textInput.placeholder = 'Please specify intake source';
+    textInput.style.marginTop = '4px';
+    textInput.style.height = 'var(--field-h)';
+    textInput.style.border = '1px solid var(--line)';
+    textInput.style.borderRadius = '10px';
+    textInput.style.padding = '0 12px';
+    subWrap.appendChild(textInput);
+    subWrap.classList.remove('hidden');
+  } else if (config) {
+    // Use dropdown for normal cases
+    labelEl.textContent = config.label;
+    subSelect.classList.remove('hidden');
+    subSelect.innerHTML =
+      '<option value="" selected disabled>Choose…</option>' +
+      config.options.map(opt => `<option>${opt}</option>`).join('');
+    subWrap.classList.remove('hidden');
+  } else {
+    subSelect.innerHTML = '<option value="" selected disabled>Choose…</option>';
+    subSelect.classList.remove('hidden');
+    subWrap.classList.add('hidden');
+  }
+}
+
+
+const intakeSourceStaff = document.getElementById('intakeSource');
+const intakeSubWrapStaff = document.getElementById('intakeSubWrap');
+const intakeSubStaff = document.getElementById('intakeSub');
+if (intakeSourceStaff) {
+  intakeSourceStaff.addEventListener('change', () =>
+    handleIntakeSourceChange(intakeSourceStaff, intakeSubWrapStaff, intakeSubStaff)
+  );
+}
+
+const intakeSourceGuest = document.getElementById('g_intakeSource');
+const intakeSubWrapGuest = document.getElementById('g_intakeSubWrap');
+const intakeSubGuest = document.getElementById('g_intakeSub');
+if (intakeSourceGuest) {
+  intakeSourceGuest.addEventListener('change', () =>
+    handleIntakeSourceChange(intakeSourceGuest, intakeSubWrapGuest, intakeSubGuest)
+  );
+}
+
+})();
+
   </script>
 </body>
 </html>
