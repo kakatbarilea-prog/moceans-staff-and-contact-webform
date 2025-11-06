@@ -437,14 +437,16 @@
     <label for="g_intakeSource">Intake Source</label>
     <select id="g_intakeSource" name="intakeSource">
       <option value="" selected disabled>Choose…</option>
-      <option value="direct_phone_call">Direct Phone Call</option>
-      <option value="voicemail">Voicemail</option>
-      <option value="email">Email</option>
-      <option value="web_form">Web Form</option>
-      <option value="walk_in">Walk-in</option>
-      <option value="slack_answerconnect">Slack (AnswerConnect)</option>
-      <option value="referral">Referral</option>
-      <option value="other">Other</option>
+<option value="phone">Phone</option>
+<option value="email">Email</option>
+<option value="text">Text</option>
+<option value="voicemail">Voicemail</option>
+<option value="walk_in">Walk-in</option>
+<option value="website_live_chat">Website Live Chat</option>
+<option value="social_media_msg">Social Media Messaging</option>
+<option value="web_form">Web Form</option>
+<option value="referral">Referral</option>
+
     </select>
   </div>
 
@@ -854,14 +856,16 @@
     <label for="intakeSource">Intake Source</label>
     <select id="intakeSource" name="intakeSource">
       <option value="" selected disabled>Choose…</option>
-      <option value="direct_phone_call">Direct Phone Call</option>
-      <option value="voicemail">Voicemail</option>
-      <option value="email">Email</option>
-      <option value="web_form">Web Form</option>
-      <option value="walk_in">Walk-in</option>
-      <option value="slack_answerconnect">Slack (AnswerConnect)</option>
-      <option value="referral">Referral</option>
-      <option value="other">Other</option>
+<option value="phone">Phone</option>
+<option value="email">Email</option>
+<option value="text">Text</option>
+<option value="voicemail">Voicemail</option>
+<option value="walk_in">Walk-in</option>
+<option value="website_live_chat">Website Live Chat</option>
+<option value="social_media_msg">Social Media Messaging</option>
+<option value="web_form">Web Form</option>
+<option value="referral">Referral</option>
+
     </select>
   </div>
 
@@ -1559,37 +1563,25 @@
 
       // ====== Conditional sub-menu logic for Intake Source ======
 const subMenus = {
-  direct_phone_call: {
-    label: "Call Direction",
-    options: ["Inbound (client called us)", "Outbound (we called client)"]
+  walk_in: {
+    type: "text",
+    label: "Walk-in Location",
+    placeholder: "Enter office or event location"
   },
-  voicemail: {
-    label: "Voicemail Source",
-    options: ["Main line", "Staff direct line", "Forwarded / AnswerConnect"]
-  },
-  email: {
-    label: "Email Direction",
-    options: ["Inbound (client emailed us)", "Outbound (we emailed client)", "Automated (system-generated)"]
+  social_media_msg: {
+    type: "select",
+    label: "Social Media Platform",
+    options: ["Facebook Messenger", "Instagram DM", "LinkedIn Message", "X / Twitter DM", "WhatsApp", "Other"]
   },
   web_form: {
-    label: "Form Type",
-    options: ["General inquiry", "Referral form", "Volunteer / donor form", "Other"]
-  },
-  walk_in: {
-    label: "Walk-in Location",
-    options: ["Long Branch office", "Toms River office", "Outreach / community event"]
-  },
-  slack_answerconnect: {
-    label: "Slack Message Type",
-    options: ["Inbound from client", "Transfer from AnswerConnect", "Internal message"]
+    type: "select",
+    label: "Web Form Name",
+    placeholder: "list of forms in Segwik"
   },
   referral: {
-    label: "Referral Type",
-    options: ["Hospital / Clinic", "Social Services / County", "School / College", "Veteran Services", "Housing Authority / Landlord", "Nonprofit / Advocacy"]
-  },
-  other: {
-    label: "Other Source",
-    options: ["(freeform text entry not yet implemented)"]
+    type: "select",
+    label: "Referring Party Information",
+    placeholder: "name, email/phone/organization name"
   }
 };
 
@@ -1598,41 +1590,42 @@ function handleIntakeSourceChange(srcSelect, subWrap, subSelect) {
   const config = subMenus[val];
   const labelEl = subWrap.querySelector('label');
 
-  // Remove any previous input field
-  const existingText = subWrap.querySelector('input[type="text"]');
-  if (existingText) existingText.remove();
+  // Clear any previous custom field
+  const oldInput = subWrap.querySelector('input');
+  if (oldInput) oldInput.remove();
 
-  if (val === 'other') {
-    // Show a freeform text box instead
-    labelEl.textContent = 'Please specify:';
+  if (!config) {
+    subWrap.classList.add('hidden');
+    subSelect.innerHTML = '<option value="" selected disabled>Choose…</option>';
+    return;
+  }
+
+  labelEl.textContent = config.label;
+  subWrap.classList.remove('hidden');
+
+  if (config.type === 'text') {
     subSelect.classList.add('hidden');
     const textInput = document.createElement('input');
     textInput.type = 'text';
-    textInput.name = srcSelect.id === 'intakeSource' ? 'intakeOther' : 'g_intakeOther';
-    textInput.id = srcSelect.id === 'intakeSource' ? 'intakeOther' : 'g_intakeOther';
-    textInput.placeholder = 'Please specify intake source';
+    textInput.placeholder = config.placeholder || '';
+    textInput.name = srcSelect.id === 'intakeSource' ? 'intakeSub' : 'g_intakeSub';
     textInput.style.marginTop = '4px';
     textInput.style.height = 'var(--field-h)';
     textInput.style.border = '1px solid var(--line)';
     textInput.style.borderRadius = '10px';
     textInput.style.padding = '0 12px';
     subWrap.appendChild(textInput);
-    subWrap.classList.remove('hidden');
-  } else if (config) {
-    // Use dropdown for normal cases
-    labelEl.textContent = config.label;
+  } else if (config.type === 'select') {
     subSelect.classList.remove('hidden');
-    subSelect.innerHTML =
-      '<option value="" selected disabled>Choose…</option>' +
-      config.options.map(opt => `<option>${opt}</option>`).join('');
-    subWrap.classList.remove('hidden');
-  } else {
-    subSelect.innerHTML = '<option value="" selected disabled>Choose…</option>';
-    subSelect.classList.remove('hidden');
-    subWrap.classList.add('hidden');
+    if (config.options) {
+      subSelect.innerHTML =
+        '<option value="" selected disabled>Choose…</option>' +
+        config.options.map(opt => `<option>${opt}</option>`).join('');
+    } else {
+      subSelect.innerHTML = `<option value="" selected disabled>${config.placeholder}</option>`;
+    }
   }
 }
-
 
 const intakeSourceStaff = document.getElementById('intakeSource');
 const intakeSubWrapStaff = document.getElementById('intakeSubWrap');
@@ -1653,6 +1646,7 @@ if (intakeSourceGuest) {
 }
 
 })();
+
 
   </script>
 </body>
